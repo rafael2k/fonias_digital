@@ -7,38 +7,10 @@
 
 hybridCrypt::hybridCrypt()
 {
-  const uchar *d;
-  QByteArray ba;
-  QResource qrc(":/icons/mgc.raw");
-  QResource qrc2(":/icons/mgc2.raw");
-  d=qrc.data();
-  key1=d[32]-0x36;
-  key2=d[33]-0x72;
-  key3=d[34]-0xd8;
-  key4=d[35]-0xFE;
-  ba.clear();
-  ba.append((const char *)qrc2.data());
-  deCrypt(&ba);
-  vhcFtpRemoteHost=hcFtpRemoteHost;
-  vhcFtpLogin=hcFtpLogin;
-  vhcFtpPassword=hcFtpPassword;
-  vhcFtpRemoteDirectory=hcFtpRemoteDirectory;
-  vhcFtpPort=21; // at this moment no port can by specified
-  hcFtpPort=vhcFtpPort;
-  if((enableSpecialServer) && (!hybridFtpRemoteHost.isEmpty()))
-    {
-      hcFtpRemoteHost=hybridFtpRemoteHost;
-      hcFtpLogin=hybridFtpLogin;
-      hcFtpPassword=hybridFtpPassword;
-      hcFtpRemoteDirectory=hybridFtpRemoteDirectory; //always relatif to /HybridFiles
-    }
-  else
-    {
-      hcFtpRemoteHost=vhcFtpRemoteHost;
-      hcFtpLogin=vhcFtpLogin;
-      hcFtpPassword=vhcFtpPassword;
-      hcFtpRemoteDirectory=vhcFtpRemoteDirectory;
-    }
+  key1=4;
+  key2=5;
+  key3=7;
+  key4=1;
 }
 
 
@@ -47,7 +19,14 @@ bool hybridCrypt::enCrypt(QByteArray *ba)
 {
   int i;
   QString string,hstr;
-
+  hcFtpPort=21;
+  if(!hybridFtpRemoteHost.isEmpty())
+    {
+      hcFtpRemoteHost=hybridFtpRemoteHost;
+      hcFtpLogin=hybridFtpLogin;
+      hcFtpPassword=hybridFtpPassword;
+      hcFtpRemoteDirectory=hybridFtpRemoteDirectory; //always relatif to /HybridFiles
+    }
 
   hstr=QChar(63)+hcFtpRemoteHost+QChar(34)+hcFtpLogin+QChar(60)+hcFtpPassword+QChar(62)+hcFtpRemoteDirectory+QChar(58);
 
@@ -139,14 +118,7 @@ bool hybridCrypt::deCrypt(QByteArray *ba)
       if(baSize%2!=0) return false;
     }
 
-  if(baSize<20)
-    {
-      hcFtpRemoteHost=vhcFtpRemoteHost;
-      hcFtpLogin=vhcFtpLogin;
-      hcFtpPassword=vhcFtpPassword;
-      hcFtpRemoteDirectory=vhcFtpRemoteDirectory;
-      return true;
-    }
+  if(baSize<20) return false;
   do
     {
       for(bufI=0;bufI<4;bufI++,charCount+=2)
@@ -228,14 +200,15 @@ bool hybridCrypt::getParam(QString resultStr)
   hcFtpRemoteHost=resultStr.mid(a+1,b-a-1);
   hcFtpLogin=resultStr.mid(b+1,c-b-1);
   hcFtpPassword=resultStr.mid(c+1,d-c-1);
+  hcFtpPort=21; // FIXED Port Settings
   tempDir=resultStr.mid(d+1,e-d-1);
   if( !tempDir.isEmpty())
     {
-      hcFtpRemoteDirectory=resultStr.mid(d+1,e-d-1)+"/"+vhcFtpRemoteDirectory;
+      hcFtpRemoteDirectory=resultStr.mid(d+1,e-d-1);
     }
   else
     {
-      hcFtpRemoteDirectory=vhcFtpRemoteDirectory;
+      hcFtpRemoteDirectory="";
     }
   addToLog(QString("host: %1, login: %2, pwd: %3, dir: %4").arg(hcFtpRemoteHost).arg(hcFtpLogin).arg(hcFtpPassword).arg(hcFtpRemoteDirectory),LOGALL);
   return true;

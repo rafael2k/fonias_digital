@@ -23,6 +23,8 @@ public:
   void writeSettings();
   void displaySettings(bool drm);
   double getVolumeDb();
+  QImage *getImage();
+
 private slots:
   void slotMaxDbChanged(int mb);
   void slotRangeChanged(int rg);

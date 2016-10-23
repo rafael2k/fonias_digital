@@ -17,10 +17,8 @@
 #define errorOut() qDebug()
 #ifdef ENABLELOGGING
 #define addToLog(x,y) logFilePtr->add(__FILE__,__func__,__LINE__,x,y)
-
 #else
-//#define addToLog(x,y) logFilePtr->dummyAdd(x,y) // to avoid parameter not used warnings
-#define addToLog(x,y) {} // to avoid parameter not used warnings
+#define addToLog(x,y) {}
 #endif
 
 class QTextStream;

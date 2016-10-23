@@ -40,7 +40,7 @@
       <number>1</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0,0,0,1,0,3,0,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0,0,0,1,0,0,3,0,0">
        <property name="spacing">
         <number>2</number>
        </property>
@@ -175,6 +175,23 @@
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="uploadToolButton">
+         <property name="toolTip">
+          <string>Upload Now</string>
+         </property>
+         <property name="statusTip">
+          <string>Upload Now</string>
+         </property>
+         <property name="text">
+          <string>Upload</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/up.png</normaloff>:/icons/up.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -254,7 +271,7 @@
           <number>1</number>
          </property>
          <property name="maximum">
-          <number>200</number>
+          <number>1000</number>
          </property>
          <property name="pageStep">
           <number>10</number>
@@ -310,6 +327,19 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="sizeDurationLabel">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
          </property>
         </widget>
        </item>
@@ -779,85 +809,83 @@
         </palette>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="sstvTXTab">
         <attribute name="title">
          <string>SSTV</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <property name="spacing">
-          <number>1</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <property name="spacing">
-            <number>1</number>
-           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <spacer name="horizontalSpacer_6">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="modeLabel">
-               <property name="text">
-                <string>Mode</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-               <property name="wordWrap">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="sstvModeComboBox">
-               <property name="toolTip">
-                <string>Transmit mode</string>
-               </property>
-               <property name="statusTip">
-                <string>Transmit mode</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_2">
+            <spacer name="horizontalSpacer_6">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
-               <height>40</height>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="modeLabel">
+             <property name="text">
+              <string>Mode</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="sstvModeComboBox">
+             <property name="toolTip">
+              <string>Transmit mode</string>
+             </property>
+             <property name="statusTip">
+              <string>Transmit mode</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>19</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="sstvResizeComboBox"/>
            </item>
           </layout>
          </item>
@@ -959,13 +987,13 @@
           <widget class="QComboBox" name="drmTxQAMComboBox">
            <property name="minimumSize">
             <size>
-             <width>40</width>
+             <width>45</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>45</width>
              <height>16777215</height>
             </size>
            </property>
@@ -1009,13 +1037,13 @@
           <widget class="QComboBox" name="drmTxBandwidthComboBox">
            <property name="minimumSize">
             <size>
-             <width>65</width>
+             <width>70</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>65</width>
+             <width>70</width>
              <height>16777215</height>
             </size>
            </property>
@@ -1568,6 +1596,12 @@
      </item>
      <item>
       <widget class="QPlainTextEdit" name="txNotificationList">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="acceptDrops">
         <bool>false</bool>
        </property>

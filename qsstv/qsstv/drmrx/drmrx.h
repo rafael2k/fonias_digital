@@ -25,8 +25,6 @@ public slots:
   float rRation;
   float resamp_signal[2 * DRMBUFSIZE];
   drmHilbertFilter iqFilter;
-
-
 };
 
 #endif // DRMRX_H

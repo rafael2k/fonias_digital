@@ -8,6 +8,7 @@ extViewer::extViewer(QWidget *parent) :   QDialog(parent),   ui(new Ui::extViewe
   ui->setupUi(this);
   activeMovie=false;
   setModal(false);
+  setWindowState(Qt::WindowMaximized);
 }
 
 extViewer::~extViewer()
@@ -21,6 +22,7 @@ void extViewer::setup(QString fn)
   int fw,fh;
   // we want the original image
   ui->imViewer->stretch=true;
+  ui->imViewer->setType(imageViewer::EXTVIEW);
   ui->imViewer->openImage(fn,false,false,false);
   fileName=fn;
   QFileInfo fi(fn);

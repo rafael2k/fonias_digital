@@ -27,6 +27,9 @@
 
 
 
+
+
+
 txWidget::txWidget(QWidget *parent) :  QWidget(parent), ui(new Ui::txWidget)
 {
   int i;
@@ -42,15 +45,25 @@ txWidget::txWidget(QWidget *parent) :  QWidget(parent), ui(new Ui::txWidget)
       ui->sstvModeComboBox->addItem(getSSTVModeNameLong((esstvMode)i));
     }
 
+  ui->sstvResizeComboBox->addItem("Stretch");
+  ui->sstvResizeComboBox->addItem("Crop");
+  ui->sstvResizeComboBox->addItem("Fit");
 
   connect(ui->sstvModeComboBox,SIGNAL(activated(int)),SLOT(slotModeChanged(int )));
+  connect(ui->sstvResizeComboBox,SIGNAL(activated(int)),SLOT(slotResizeChanged(int)));
 
+  connect(ui->drmTxBandwidthComboBox,SIGNAL(activated(int)),SLOT(slotGetTXParams()));
+  connect(ui->drmTxInterleaveComboBox,SIGNAL(activated(int)),SLOT(slotGetTXParams()));
+  connect(ui->drmTxProtectionComboBox,SIGNAL(activated(int)),SLOT(slotGetTXParams()));
+  connect(ui->drmTxQAMComboBox,SIGNAL(activated(int)),SLOT(slotGetTXParams()));
+  connect(ui->drmTxModeComboBox,SIGNAL(activated(int)),SLOT(slotGetTXParams()));
+  connect(ui->drmTxReedSolomonComboBox,SIGNAL(activated(int)),SLOT(slotGetTXParams()));
 
   connect(ui->templatesComboBox,SIGNAL(currentIndexChanged(int)),SLOT(slotGetParams()));
   connect(ui->templateCheckBox,SIGNAL(toggled(bool)),SLOT(slotGetParams()));
   connect(ui->refreshPushButton,SIGNAL(clicked()),SLOT(slotGetParams()));
-  connect(ui->cwCheckBox,SIGNAL(toggled(bool)),SLOT(slotGetParams()));
-  connect(ui->voxCheckBox,SIGNAL(toggled(bool)),SLOT(slotGetParams()));
+  connect(ui->cwCheckBox,SIGNAL(toggled(bool)),SLOT(slotGetTXParams()));
+  connect(ui->voxCheckBox,SIGNAL(toggled(bool)),SLOT(slotGetTXParams()));
   connect(ui->toCallLineEdit,SIGNAL(editingFinished ()),SLOT(slotGetParams()));
   connect(ui->operatorLineEdit,SIGNAL(editingFinished ()),SLOT(slotGetParams()));
   connect(ui->rsvLineEdit,SIGNAL(editingFinished ()),SLOT(slotGetParams()));
@@ -62,6 +75,9 @@ txWidget::txWidget(QWidget *parent) :  QWidget(parent), ui(new Ui::txWidget)
   connect(ui->startToolButton, SIGNAL(clicked()), this, SLOT(slotStart()));
   connect(ui->stopToolButton, SIGNAL(clicked()), this, SLOT(slotStop()));
   connect(ui->drmProfileComboBox,SIGNAL(activated(int)),SLOT(slotProfileChanged(int )));
+
+  connect(ui->hybridCheckBox,SIGNAL(toggled(bool)),SLOT(slotHybridToggled()));
+  connect(ui->uploadToolButton, SIGNAL(clicked()), this, SLOT(slotUpload()));
 
   connect(ui->generateToneToolButton, SIGNAL(clicked()), this, SLOT(slotGenerateSignal()));
   connect(ui->sweepToneToolButton, SIGNAL(clicked()), this, SLOT(slotSweepSignal()));
@@ -77,13 +93,22 @@ txWidget::txWidget(QWidget *parent) :  QWidget(parent), ui(new Ui::txWidget)
   connect(ui->templatesComboBox,SIGNAL(currentIndexChanged(int)),SLOT(slotImageChanged()));
 
   sizeRatio=-1;
+
+  hybridTxIntf = new ftpInterface("HybridTX");
+  notifyTXIntf   = new ftpInterface("HybridTXNotify");
+  onlineStatusIntf = new ftpInterface("HybridOnlineStatus");
+
 }
 
 txWidget::~txWidget()
 {
   writeSettings();
+  delete hybridTxIntf;
+  delete notifyTXIntf;
+  delete onlineStatusIntf;
   txFunctionsPtr->terminate();
   delete txFunctionsPtr;
+
   delete ui;
 }
 
@@ -114,7 +139,6 @@ void txWidget::init()
       ui->txNotificationList->hide();
       ui->refreshPushButton->hide();
       ui->previewWidget->hide();
-
     }
 }
 
@@ -166,15 +190,31 @@ void txWidget::writeSettings()
   qSettings.endGroup();
 }
 
-void txWidget::slotGetParams()
+void txWidget::slotGetTXParams()
 {
+  // get only the params that don't require re-applying the template
+  // used by prepareTX() and slotGetParams()
   int temp=sstvModeIndexTx;
   getIndex(temp,ui->sstvModeComboBox);
   sstvModeIndexTx=esstvMode(temp);
-  getIndex(templateIndex,ui->templatesComboBox);
-  getValue(useTemplate,ui->templateCheckBox);
   getValue(useVOX,ui->voxCheckBox);
   getValue(useCW,ui->cwCheckBox);
+  getIndex(drmParams.bandwith,ui->drmTxBandwidthComboBox);
+  getIndex(drmParams.interleaver,ui->drmTxInterleaveComboBox);
+  getIndex(drmParams.protection,ui->drmTxProtectionComboBox);
+  getIndex(drmParams.qam,ui->drmTxQAMComboBox);
+  getIndex(drmParams.robMode,ui->drmTxModeComboBox);
+  getIndex(drmParams.reedSolomon,ui->drmTxReedSolomonComboBox);
+  drmParams.callsign=myCallsign;
+  updateTxTime();
+  txFunctionsPtr->forgetTxFileName();
+}
+
+
+void txWidget::slotGetParams()
+{
+  getIndex(templateIndex,ui->templatesComboBox);
+  getValue(useTemplate,ui->templateCheckBox);
   getValue(useHybrid,ui->hybridCheckBox);
   getValue(imageViewerPtr->toCall,ui->toCallLineEdit);
   getValue(imageViewerPtr->toOperator,ui->operatorLineEdit);
@@ -182,14 +222,9 @@ void txWidget::slotGetParams()
   getValue(imageViewerPtr->comment1,ui->xPlainTextEdit);
   getValue(imageViewerPtr->comment2,ui->yPlainTextEdit);
   getValue(imageViewerPtr->comment3,ui->zPlainTextEdit);
-  getIndex(drmParams.bandwith,ui->drmTxBandwidthComboBox);
-  getIndex(drmParams.interleaver,ui->drmTxInterleaveComboBox);
-  getIndex(drmParams.protection,ui->drmTxProtectionComboBox);
-  getIndex(drmParams.qam,ui->drmTxQAMComboBox);
-  getIndex(drmParams.robMode,ui->drmTxModeComboBox);
-  getIndex(drmParams.reedSolomon,ui->drmTxReedSolomonComboBox);
+  slotGetTXParams();
   getValue(sizeRatio,ui->sizeSlider);
-  drmParams.callsign=myCallsign;
+  ui->uploadToolButton->setEnabled(useHybrid && (transmissionModeIndex!=TRXSSTV));
   if(txFunctionsPtr->getTXState()==txFunctions::TXIDLE)
     {
       applyTemplate();
@@ -215,6 +250,8 @@ void txWidget::setParams()
   setIndex(drmParams.robMode,ui->drmTxModeComboBox);
   setIndex(drmParams.reedSolomon,ui->drmTxReedSolomonComboBox);
   setValue(sizeRatio,ui->sizeSlider);
+  ui->uploadToolButton->setEnabled(useHybrid && (transmissionModeIndex!=TRXSSTV));
+  updateTxTime();
 }
 
 void txWidget::copyProfile(drmTxParams d)
@@ -266,7 +303,7 @@ void txWidget::startTX(bool st,bool check)
 {
   if(st)
     {
-      slotGetParams();
+      //slotGetParams();
       if(check)
         {
           if(!imageViewerPtr->hasValidImage())
@@ -285,12 +322,82 @@ void txWidget::startTX(bool st,bool check)
 
 void txWidget::slotStart()
 {
+  if(imageViewerPtr->hasValidImage()) {
+      doTx=1;
+      prepareTx();
+    }
+}
+
+void txWidget::slotUpload()
+{
+  if(imageViewerPtr->hasValidImage()) {
+      doTx=0;
+      prepareTx();
+    }
+}
+
+void txWidget::prepareTx()
+{
+  addToLog(QString("doTx=%1").arg(doTx),LOGTXMAIN);
+  ui->uploadToolButton->setEnabled(false);
+  ui->startToolButton->setEnabled(false);
+
+  switch (transmissionModeIndex)
+    {
+    case TRXSSTV: dispatcherPtr->prepareTX(txFunctions::TXPREPARESSTV);
+    break;
+    case TRXDRM:  dispatcherPtr->prepareTX(txFunctions::TXPREPAREDRMPIC);
+    break;
+    case TRXNOMODE:
+    break;
+    }
+}
+
+void txWidget::prepareTxComplete(bool ok)
+{
+  addToLog(QString("ok=%1, doTx=%2").arg(ok).arg(doTx),LOGTXMAIN);
+  if (!ok) {
+      addToLog("Upload/prepare failed",LOGTXMAIN);
+      ui->uploadToolButton->setEnabled(useHybrid && (transmissionModeIndex!=TRXSSTV));
+    }
+  ui->startToolButton->setEnabled(true);
+  if (ok && doTx) {
+      if (doTx==2) {
+          if (useHybrid)
+            {
+              QMessageBox mbox(mainWindowPtr);
+              QPushButton *sendButton;
+              mbox.setWindowTitle("TX Binary File");
+              mbox.setText("The file has been uploaded ready for transmission");
+
+              sendButton = mbox.addButton(tr("Start Transmitting"), QMessageBox::AcceptRole);
+              mbox.setStandardButtons(QMessageBox::Cancel);
+
+              mbox.exec();
+              if (mbox.clickedButton() == sendButton) {
+                  dispatcherPtr->startTX(txFunctions::TXSENDDRMBINARY);
+                }
+            }
+          else
+            {
+              dispatcherPtr->startTX(txFunctions::TXSENDDRMBINARY);
+            }
+        }
+      else
+        {
+          startTxImage();
+        }
+    }
+}
+
+void txWidget::startTxImage()
+{
   QDateTime dt(QDateTime::currentDateTime().toUTC()); //this is compatible with QT 4.6
   dt.setTimeSpec(Qt::UTC);
   if(!imageViewerPtr->hasValidImage()) return;
   QFileInfo finf=imageViewerPtr->getFilename();
   QString fn;
-  slotGetParams();
+
   switch(transmissionModeIndex)
     {
     case TRXSSTV:
@@ -301,7 +408,7 @@ void txWidget::slotStart()
           galleryWidgetPtr->txImageChanged();
         }
       dispatcherPtr->startTX(txFunctions::TXSSTVIMAGE);
-      break;
+    break;
     case TRXDRM:
       if(saveTXimages)
         {
@@ -309,12 +416,12 @@ void txWidget::slotStart()
           imageViewerPtr->save(fn,defaultImageFormat,true,false);
           galleryWidgetPtr->txImageChanged();
         }
-      dispatcherPtr->startTX(txFunctions::TXSENDDRM);
-      break;
+      dispatcherPtr->startTX(txFunctions::TXSENDDRMPIC);
+    break;
       //    case FAX:
       //    break;
     case TRXNOMODE:
-      break;
+    break;
     }
 }
 
@@ -359,13 +466,14 @@ void txWidget::sendWfText()
 void txWidget::slotStop()
 {
   dispatcherPtr->startRX();
+  ui->startToolButton->setEnabled(true);
 }
 
 
-void txWidget::slotDisplayStatusMessage(QString s)
-{
-  statusBarPtr->showMessage(s);
-}
+//void txWidget::slotDisplayStatusMessage(QString s)
+//{
+//  statusBarPtr->showMessage(s);
+//}
 
 
 //void txWidget::slotReplay()
@@ -444,7 +552,7 @@ void txWidget::slotEdit()
 {
   if (ed!=NULL) delete ed;
   ed=new editor(this);
-  if(txFunctionsPtr->isRunning())
+  if(txFunctionsPtr->txBusy())
     {
       QMessageBox::warning(this,"Editor","Transmission busy, editor not available");
       return;
@@ -461,6 +569,14 @@ void txWidget::slotEdit()
 void txWidget::applyTemplate()
 {
   txFunctionsPtr->applyTemplate(imageViewerPtr,galleryWidgetPtr->getTemplateFileName(ui->templatesComboBox->currentIndex()));
+  ui->uploadToolButton->setEnabled(useHybrid && (transmissionModeIndex!=TRXSSTV));
+  updateTxTime();
+}
+
+void txWidget::updateTxTime()
+{
+  int s=txFunctionsPtr->calcTxTime(false,0);
+  ui->sizeDurationLabel->setText( QString::number(s)+"s");
 }
 
 
@@ -485,6 +601,21 @@ void txWidget::slotModeChanged(int m)
     }
 }
 
+void txWidget::slotResizeChanged(int i)
+{
+  switch (i) {
+    case 0: // Stretch
+      imageViewerPtr->setAspectMode(Qt::IgnoreAspectRatio);
+    break;
+    case 1: // Crop
+      imageViewerPtr->setAspectMode(Qt::KeepAspectRatioByExpanding);
+    break;
+    case 2: // Fit
+      imageViewerPtr->setAspectMode(Qt::KeepAspectRatio);
+    break;
+    }
+  applyTemplate();
+}
 
 /** \todo implement repeater */
 
@@ -517,19 +648,19 @@ void txWidget::slotRepeaterTimer()
         {
         case 0:
           fn=repeaterImage1;
-          break;
+        break;
         case 1:
           fn=repeaterImage2;
-          break;
+        break;
         case 2:
           fn=repeaterImage3;
-          break;
+        break;
         case 3:
           fn=repeaterImage4;
-          break;
+        break;
         default:
           fn=repeaterImage1;
-          break;
+        break;
         }
       fi.setFileName(fn);
       if (fi.exists())
@@ -575,19 +706,24 @@ void txWidget::setSettingsTab()
     if(transmissionModeIndex==TRXDRM)
       {
         ui->hybridCheckBox->setEnabled(true);
+        ui->uploadToolButton->setEnabled(useHybrid && (transmissionModeIndex!=TRXSSTV));
         ui->binaryPushButton->setEnabled(true);
         ui->sizeLabel->setEnabled(true);
         ui->sizeSlider->setEnabled(true);
         ui->sizeKbLabel->setEnabled(true);
+        ui->sizeDurationLabel->setEnabled(true);
         mainWindowPtr->setSSTVDRMPushButton(true);
       }
     else
       {
         ui->hybridCheckBox->setEnabled(false);
+        ui->uploadToolButton->setEnabled(false);
         ui->binaryPushButton->setEnabled(false);
         ui->sizeLabel->setEnabled(false);
         ui->sizeSlider->setEnabled(false);
         ui->sizeKbLabel->setEnabled(false);
+        ui->sizeDurationLabel->setEnabled(false);
+        ui->sizeDurationLabel->setText("-");
         mainWindowPtr->setSSTVDRMPushButton(false);
       }
   }
@@ -615,7 +751,7 @@ void txWidget::slotSizeApply()
   fileSize=imageViewerPtr->setSizeRatio(sizeRatio,transmissionModeIndex==TRXDRM);
   imageViewerPtr->displayImage();
   ui->sizeKbLabel->setText( QString::number(fileSize/1000)+ "kB");
-  applyTemplate();
+  //  applyTemplate();
   QApplication::restoreOverrideCursor();
 }
 
@@ -685,9 +821,16 @@ void txWidget::slotImageChanged()
 void txWidget::slotBinary()
 {
   slotGetParams();
+  doTx=2;
   dispatcherPtr->startDRMTxBinary();
 }
 
+void txWidget::slotHybridToggled()
+{
+  getValue(useHybrid,ui->hybridCheckBox);
+  ui->uploadToolButton->setEnabled(useHybrid && (transmissionModeIndex!=TRXSSTV));
+  updateTxTime();
+}
 
 void txWidget::txTestPattern(etpSelect sel)
 {

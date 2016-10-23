@@ -7,7 +7,7 @@
 
 const QString MAJORVERSION  = "9.2";
 const QString CONFIGVERSION = "9.0";
-const QString MINORVERSION  = ".2";
+const QString MINORVERSION  = ".4";
 const QString LOGVERSION = ("qsstv."+MAJORVERSION+MINORVERSION+".log");
 const QString ORGANIZATION = "ON4QZ";
 const QString APPLICATION  = ("qsstv_" +CONFIGVERSION);
@@ -22,6 +22,12 @@ mainWindow *mainWindowPtr;
 soundBase *soundIOPtr;
 logFile *logFilePtr;
 configDialog *configDialogPtr;
+
+
+ftpInterface *notifyRXIntf;
+ftpInterface *hybridTxIntf;
+ftpInterface *notifyTXIntf;
+ftpInterface *onlineStatusIntf;
 
 
 

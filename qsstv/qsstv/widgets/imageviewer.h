@@ -38,7 +38,7 @@ class imageViewer : public QLabel
   /*! thumbnail type */
 public:
   enum thumbType
-    {
+  {
     RXIMG, /*!< just for receiver */
     TXIMG, /*!< just for transmitter */
     RXSSTVTHUMB, /*!< thumbnail for receiver. */
@@ -47,8 +47,9 @@ public:
     TXDRMTHUMB,/*!< thumbnail for transmitter. */
     TXSTOCKTHUMB,/*!< thumbnail for transmitter. */
     TEMPLATETHUMB, /*!< thumbnail for template. */
-    PREVIEW /*!< preview tx. */
-    };
+    PREVIEW, /*!< preview tx. */
+    EXTVIEW /*!< extViewer. */
+  };
   imageViewer(QWidget *parent=0);
   ~imageViewer();
 
@@ -63,7 +64,7 @@ public:
   bool reload();
 
 
-//  void scale( int w, int h);
+  //  void scale( int w, int h);
   QImage * getImagePtr() {return &sourceImage;}
   bool hasValidImage();
   void setValidImage(bool v)
@@ -76,12 +77,16 @@ public:
   void copy(imageViewer *src);
   void setType(thumbType t);
   QString getFilename() {return imageFileName;}
+  QString getCompressedFilename() {return compressedFilename;}
   void enablePopup(bool en) {popupEnabled=en;}
   void displayImage();
+  QPoint mapToImage(const QPoint &pos);
+  void zoom(QPoint centre, int dlevel);
   void save(QString fileName, QString fmt, bool convertRGB, bool source);
   bool copyToBuffer(QByteArray *ba);
-//  int calcSize(int &sizeRatio);
+  //  int calcSize(int &sizeRatio);
   uint setSizeRatio(int sizeRatio,bool usesCompression);
+  void setAspectMode(Qt::AspectRatioMode mode);
   int getFileSize(){return fileSize;}
   QString toCall;
   QString toOperator;
@@ -106,10 +111,14 @@ private slots:
   void slotLoad();
   void slotNew();
   void slotPrint();
+  void slotUploadFTP();
   void slotProperties();
   void slotToTX();
   void slotView();
   void slotBGColorChanged();
+  void slotZoomIn();
+  void slotZoomOut();
+  void slotLeftClick();
 
 
 signals:
@@ -120,10 +129,13 @@ private:
   QImage displayedImage;
   QImage sourceImage;
   QImage compressedImage;
+  QByteArray compressedImageData;
+
 
   void mousePressEvent( QMouseEvent *e );
   bool validImage;
   QString imageFileName;
+  QString compressedFilename;
   QString imageFilePath;
   thumbType ttype;
   bool popupEnabled;
@@ -134,11 +146,14 @@ private:
   QAction *toTXAct;
   QAction *editAct;
   QAction *printAct;
+  QAction *uploadAct;
   QAction *deleteAct;
   QAction *viewAct;
   QAction *propertiesAct;
+  QAction *zoomInAct;
+  QAction *zoomOutAct;
 
-//  double psizeRatio;
+  //  double psizeRatio;
   int compressionRatio; // 0=lossless 99 is max compression
   int fileSize;
   QString format;
@@ -146,11 +161,15 @@ private:
   bool activeMovie;
   bool useCompression;
   QString templateFileName;
+  Qt::AspectRatioMode aspectRatioMode;
   bool useTemplate;
   int targetWidth;
   int targetHeight;
   int orgWidth;
   int orgHeight;
+  QRect view;
+  QPoint clickPos;
+  QTimer clickTimer;
 
 };
 

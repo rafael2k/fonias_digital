@@ -99,6 +99,11 @@ void spectrumWidget::displaySettings(bool drm)
     }
 }
 
+QImage *spectrumWidget::getImage()
+{
+  return ui->waterfallWidget->getImage();
+}
+
 void spectrumWidget::slotMaxDbChanged(int mb)
 {
   ui->spectrWidget->setMaxDb(mb);

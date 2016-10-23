@@ -158,7 +158,33 @@ void fftDisplay::showFFT(double *fftData)
 }
 
 
+void fftDisplay::drawMarkers(QPainter *painter, int top, int bot)
+{
+  painter->drawLine((((marker1-FFTLOW)*imWidth)/FFTSPAN),top,(((marker1-FFTLOW)*imWidth)/FFTSPAN),bot);
+  painter->drawLine((((marker2-FFTLOW)*imWidth)/FFTSPAN),top,(((marker2-FFTLOW)*imWidth)/FFTSPAN),bot);
+  painter->drawLine((((marker3-FFTLOW)*imWidth)/FFTSPAN),top,(((marker3-FFTLOW)*imWidth)/FFTSPAN),bot);
+}
 
+QImage *fftDisplay::getImage()
+{
+  QImage *im = new QImage(width(),height()+10,QImage::Format_RGB32);
+  QPainter p(im);
+  QPen pn;
+  if (!showWaterfall) {
+     }
+  else {
+     if (imagePtr) {
+        im->fill(Qt::black);
+        p.drawImage(0,5,*imagePtr);
+        pn.setColor(Qt::red);
+        pn.setWidth(3);
+        p.setPen(pn);
+        drawMarkers(&p,0,4);
+        drawMarkers(&p,height()+5,height()+9);
+        }
+     }
+  return im;
+}
 
 void fftDisplay::paintEvent(QPaintEvent *p)
 {
@@ -170,9 +196,7 @@ void fftDisplay::paintEvent(QPaintEvent *p)
       pn.setColor(Qt::red);
       pn.setWidth(1);
       painter.setPen(pn);
-      painter.drawLine((((marker1-FFTLOW)*imWidth)/FFTSPAN),0,(((marker1-FFTLOW)*imWidth)/FFTSPAN),imHeight);
-      painter.drawLine((((marker2-FFTLOW)*imWidth)/FFTSPAN),0,(((marker2-FFTLOW)*imWidth)/FFTSPAN),imHeight);
-      painter.drawLine((((marker3-FFTLOW)*imWidth)/FFTSPAN),0,(((marker3-FFTLOW)*imWidth)/FFTSPAN),imHeight);
+      drawMarkers(&painter,0,imHeight);
       pn.setColor(Qt::green);
       painter.setPen(pn);
       painter.drawPolyline(*fftArray);
@@ -187,4 +211,3 @@ void fftDisplay::paintEvent(QPaintEvent *p)
     }
   QLabel::paintEvent(p);
 }
-

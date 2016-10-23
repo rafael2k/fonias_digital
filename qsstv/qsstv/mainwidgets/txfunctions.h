@@ -31,6 +31,7 @@ public:
     TXSENDWFID,
     TXSENDCWID,
     TXSENDDRM,
+    TXSENDDRMPIC,
     TXSENDDRMBINARY,
     TXSENDDRMBSR,
     TXSENDDRMFIX,
@@ -38,6 +39,9 @@ public:
     TXSSTVIMAGE,
     TXSSTVPOST,
     TXRESTART,
+    TXPREPARESSTV,
+    TXPREPAREDRMPIC,
+    TXPREPAREDRMBINARY,
     TXTEST
 
   };
@@ -47,6 +51,7 @@ public:
   void run();
   void stopThread();
   void startTX(etxState state);
+  void prepareTX(etxState state);
   void stopAndWait();
   void setToneParam(double duration,double lowerFreq,double upperFreq=0)
   {
@@ -58,10 +63,15 @@ public:
   bool prepareBinary(QString fileName);
   void sendBSR(QByteArray *p,drmTxParams dp);
   void applyTemplate(imageViewer *ivPtr,QString templateFilename);
+  void forgetTxFileName();
   etxState getTXState() { return txState;}
   void setDRMTxParams(drmTxParams params);
+  void setOnlineStatus(bool online, QString info="");
+  void who();
   //  bool initDRMFIX(txSession *sessionPtr);
+  int calcTxTime(bool binary, int overhead);
   void txTestPattern(imageViewer *ivPtr, etpSelect sel);
+  bool txBusy();
 
 
 private:
@@ -74,6 +84,7 @@ private:
   void sendFSKChar(int IDChar);
   void switchTxState(etxState newState);
   void startProgress(double duration);
+  void prepareTXComplete(bool ok);
   etxState txState;
   bool started;
   bool abort;

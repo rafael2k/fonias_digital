@@ -193,9 +193,9 @@ public:
   bool checkSaveImage(QByteArray ba, transportBlock *tbPtr);
   void saveImage(transportBlock *tbPtr);
   bool storeBSR(transportBlock *tb,bool compat);
-  bool rxNotifyCheck(QString fn, hybridCrypt *hc);
-private slots:
-  void rxNotification(QString info);
+  bool rxNotifySetup();
+  bool rxNotifyCheck(QString fn);
+
 private:
   bool setupDataBlock(unsigned char *buffer,bool crcIsOK,int len);
   bool setupDataPacket(QByteArray ba);
@@ -218,6 +218,6 @@ private:
   bool isHybrid;
   hybridCrypt hc;
   bool alreadyDisplayed;
-  ftpInterface *notifyIntf;
+//  ftpInterface *notifyIntf;
 };
 #endif // SOURCEDECODER_H

@@ -6,7 +6,7 @@
 #include <QMessageBox>
 
 bool enableHybridRx;
-bool enableSpecialServer;
+//bool enableSpecialServer;
 int hybridFtpPort;
 QString hybridFtpRemoteHost;
 QString hybridFtpRemoteDirectory;
@@ -32,7 +32,7 @@ void hybridConfig::readSettings()
     QSettings qSettings;
     qSettings.beginGroup("HYBRID");
     enableHybridRx=qSettings.value("enableHybridRx",true).toBool();
-    enableSpecialServer=qSettings.value("enableSpecialServer",false).toBool();
+//    enableSpecialServer=qSettings.value("enableSpecialServer",false).toBool();
     hybridFtpPort=qSettings.value("hybridFtpPort",21).toInt();
     hybridFtpRemoteHost=qSettings.value("hybridFtpRemoteHost","").toString();
     hybridFtpRemoteDirectory=qSettings.value("hybridFtpRemoteDirectory","").toString();
@@ -50,7 +50,7 @@ void hybridConfig::writeSettings()
     getParams();
     qSettings.beginGroup("HYBRID");
     qSettings.setValue("enableHybridRx",enableHybridRx);
-    qSettings.setValue("enableSpecialServer",enableSpecialServer);
+//    qSettings.setValue("enableSpecialServer",enableSpecialServer);
     qSettings.setValue("hybridFtpPort",hybridFtpPort);
     qSettings.setValue("hybridFtpRemoteHost",hybridFtpRemoteHost);
     qSettings.setValue("hybridFtpRemoteDirectory",hybridFtpRemoteDirectory);
@@ -63,7 +63,7 @@ void hybridConfig::writeSettings()
 void hybridConfig::getParams()
 {
     bool enableHybridRxCopy=enableHybridRx;
-    bool enableSpecialServerCopy=enableSpecialServer;
+//    bool enableSpecialServerCopy=enableSpecialServer;
     int hybridFtpPortCopy=hybridFtpPort;
     QString hybridFtpRemoteHostCopy=hybridFtpRemoteHost;
     QString hybridFtpRemoteDirectoryCopy=hybridFtpRemoteDirectory;
@@ -72,7 +72,7 @@ void hybridConfig::getParams()
 
 
     getValue(enableHybridRx,ui->enableHybridRxCheckBox);
-    getValue(enableSpecialServer,ui->enableSpecialServerCheckBox);
+//    getValue(enableSpecialServer,ui->enableSpecialServerCheckBox);
     getValue(hybridFtpPort,ui->hybridFtpPortSpinBox);
     getValue(hybridFtpRemoteHost,ui->hybridRemoteHostLineEdit);
     getValue(hybridFtpRemoteDirectory,ui->hybridRemoteDirectoryLineEdit);
@@ -81,7 +81,7 @@ void hybridConfig::getParams()
     getValue(hybridFtpHybridFilesDirectory,ui->hybridFilesDirectoryLineEdit);
     changed=false;
     if(  enableHybridRxCopy!=enableHybridRx
-         || enableSpecialServerCopy!=enableSpecialServer
+//         || enableSpecialServerCopy!=enableSpecialServer
          || hybridFtpPortCopy!=hybridFtpPort
          || hybridFtpRemoteHostCopy!=hybridFtpRemoteHost
          || hybridFtpRemoteDirectoryCopy!=hybridFtpRemoteDirectory
@@ -97,7 +97,7 @@ void hybridConfig::getParams()
 void hybridConfig::setParams()
 {
     setValue(enableHybridRx,ui->enableHybridRxCheckBox);
-    setValue(enableSpecialServer,ui->enableSpecialServerCheckBox);
+//    setValue(enableSpecialServer,ui->enableSpecialServerCheckBox);
     setValue(hybridFtpPort,ui->hybridFtpPortSpinBox);
     setValue(hybridFtpRemoteHost,ui->hybridRemoteHostLineEdit);
     setValue(hybridFtpRemoteDirectory,ui->hybridRemoteDirectoryLineEdit);
@@ -113,8 +113,8 @@ void hybridConfig::slotTestHybridPushButton()
     ftpInterface fInt("TestHybridConnection");
     ui->testHybridPushButton->setDisabled(true);
     getParams();
-    hybridCrypt hc;
-    fInt.setupConnection(hc.host(),hc.port(),hc.user(),hc.passwd(),hc.dir()+"/"+hybridFtpHybridFilesDirectory);
+    fInt.setupConnection(hybridFtpRemoteHost,hybridFtpPort,hybridFtpLogin,hybridFtpPassword,hybridFtpRemoteDirectory+"/"+hybridFtpHybridFilesDirectory);
+//    fInt.setupConnection(hc.host(),hc.port(),hc.user(),hc.passwd(),hc.dir()+"/"+hybridFtpHybridFilesDirectory);
     msg=fInt.execFTPTest();
     ui->testHybridPushButton->setDisabled(false);
     QMessageBox::information(this,"Test Connection",msg);

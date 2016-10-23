@@ -59,11 +59,17 @@ const QString txStateStr[txFunctions::TXTEST+1]=
   "SENDTONE",
   "SENDID",
   "SENDDRM",
+  "SENDDRMPIC",
+  "SENDDRMBINARY",
   "SENDDRMBSR",
   "SENDDRMFIX",
   "SENDDRMTXT",
   "SSTVIMAGE",
   "SSTVPOST",
+  "RESTART",
+  "PREPARESSTV",
+  "PREPAREDRM",
+  "PREPAREDRMBINARY",
   "TXTEST"
 };
 
@@ -91,12 +97,16 @@ void txFunctions::init()
   synthesPtr=new synthesizer(txClock);
   switchTxState(TXIDLE);
   addToLog("txFunc: Init",LOGTXFUNC);
+  drmTxPtr->init();
 
 }
 
 void txFunctions::run()
 {
   double waterfallTime;
+  QString startWFTxt,endWFTxt;
+
+
   abort=false;
   init();
   while(!abort)
@@ -121,89 +131,79 @@ void txFunctions::run()
           switchTxState(TXIDLE);
         break;
 
+        case TXPREPAREDRMBINARY:
+          {
+            bool ok=true;
+            if (useHybrid)
+              ok=drmTxPtr->ftpDRMHybrid(binaryFilename, drmTxPtr->getTxFileName(binaryFilename));
+            switchTxState(TXIDLE);
+            prepareTXComplete(ok);
+          }
+        break;
+        case TXPREPAREDRMPIC:
+          {
+            bool ok=true;
+            if (useHybrid)
+              ok=drmTxPtr->ftpDRMHybrid("", drmTxPtr->getTxFileName(""));
+            switchTxState(TXIDLE);
+            prepareTXComplete(ok);
+          }
+        break;
+
+        case TXSENDDRMPIC:
+          startWFTxt = startPicWF;
+          endWFTxt   = endPicWF;
+          if (drmTxPtr->initDRMImage(false,""))
+            {
+              drmTxPtr->updateTxList();
+              switchTxState(TXSENDDRM);
+            }
+          else
+            switchTxState(TXIDLE);
+        break;
+
         case TXSENDDRMBINARY:
-          waitTxOn();
-          waterfallTime=waterfallPtr->getDuration("START BIN");
-          waterfallTime+=waterfallPtr->getDuration("END BIN");
-          if(!drmTxPtr->initDRMImage(true,binaryFilename))
+          startWFTxt = startBinWF;
+          endWFTxt   = endBinWF;
+          if (drmTxPtr->initDRMImage(true,binaryFilename))
             {
-              waitEnd();
-              switchTxState(TXIDLE);
+              drmTxPtr->updateTxList();
+              switchTxState(TXSENDDRM);
             }
-          startProgress(drmTxPtr->calcTxTime(waterfallTime));
-          addToLog("start of wf",LOGTXFUNC);
-          if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
-          waterfallPtr->setText("START BIN");
-          synthesPtr->sendWFText();
-          addToLog("start of txDrm",LOGTXFUNC);
-          drmTxPtr->start();
-
-          addToLog("end of txDrm",LOGTXFUNC);
-          if(txState==TXSENDDRM) // abort if txState is idle
-            {
-              waterfallPtr->setText("END BIN");
-              synthesPtr->sendWFText();
-              addToLog("end of wf",LOGTXFUNC);
-              addToLog("txFunc: TXSENDDRM waiting for end",LOGTXFUNC);
-              waitEnd();
-            }
-          switchTxState(TXIDLE);
+          else
+            switchTxState(TXIDLE);
         break;
-        case TXSENDDRM:
-          waitTxOn();
-          waterfallTime=waterfallPtr->getDuration(endPicWF);
-          waterfallTime+=waterfallPtr->getDuration(startPicWF);
-          if(!drmTxPtr->initDRMImage(false,""))
-            {
-              waitEnd();
-              switchTxState(TXIDLE);
-              break;
-            }
-          startProgress(drmTxPtr->calcTxTime(waterfallTime));
-          if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
-          addToLog("start of wf",LOGTXFUNC);
-          waterfallPtr->setText(startPicWF);
-          synthesPtr->sendWFText();
-          addToLog("start of txDrm",LOGTXFUNC);
-          drmTxPtr->start();
-
-          addToLog("end of txDrm",LOGTXFUNC);
-          if(txState==TXSENDDRM) // abort if txState is idle
-            {
-              waterfallPtr->setText(endPicWF);
-              synthesPtr->sendWFText();
-              addToLog("end of wf",LOGTXFUNC);
-              addToLog("txFunc: TXSENDDRM waiting for end",LOGTXFUNC);
-              waitEnd();
-            }
-          switchTxState(TXIDLE);
-        break;
-
-
 
         case TXSENDDRMBSR:
-          waitTxOn();
-          waterfallTime=waterfallPtr->getDuration(bsrWF);
-          if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
-          startProgress(drmTxPtr->calcTxTime(waterfallTime));
-          synthesPtr->sendWFText();
-          drmTxPtr->start();
-          addToLog("txFunc: TXSENDDRMBSR waiting for end",LOGTXFUNC);
-          waitEnd();
-          switchTxState(TXIDLE);
+          startWFTxt = bsrWF;
+          endWFTxt   = "";
+          switchTxState(TXSENDDRM);
         break;
 
         case TXSENDDRMFIX:
+          startWFTxt = fixWF;
+          endWFTxt   = "";
+          switchTxState(TXSENDDRM);
+        break;
+
+        case TXSENDDRM:
           waitTxOn();
-          waterfallTime=waterfallPtr->getDuration(fixWF);
-          if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
+          waterfallTime=waterfallPtr->getDuration(endWFTxt);
+          waterfallTime+=waterfallPtr->getDuration(startWFTxt);
+
+
           startProgress(drmTxPtr->calcTxTime(waterfallTime));
+          addToLog("start of wf",LOGTXFUNC);
+          if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
+          waterfallPtr->setText(startWFTxt);
           synthesPtr->sendWFText();
+          addToLog("start of txDrm",LOGTXFUNC);
           drmTxPtr->start();
-          addToLog("txFunc: TXSENDDRMFIX waiting for end",LOGTXFUNC);
-          if(txState==TXSENDDRMFIX) // abort if txState is idle
+
+          addToLog("end of txDrm",LOGTXFUNC);
+          if(txState==TXSENDDRM) // abort if txState is idle
             {
-              waterfallPtr->setText(endPicWF);
+              waterfallPtr->setText(endWFTxt);
               synthesPtr->sendWFText();
               addToLog("end of wf",LOGTXFUNC);
               addToLog("txFunc: TXSENDDRM waiting for end",LOGTXFUNC);
@@ -211,9 +211,11 @@ void txFunctions::run()
             }
           switchTxState(TXIDLE);
         break;
+
         case TXSENDDRMTXT:
           waitTxOn();
         break;
+
         case TXSENDWFID:
           addToLog("Entered TXSENDID",LOGTXFUNC);
           waitTxOn();
@@ -228,11 +230,16 @@ void txFunctions::run()
         break;
 
         case TXSENDCWID:
-           waitTxOn();
-           if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
-           sendCW();
-           waitEnd();
-           switchTxState(TXIDLE);
+          waitTxOn();
+          if(useVOX) synthesPtr->sendTone(1.,1700.,0,false);
+          sendCW();
+          waitEnd();
+          switchTxState(TXIDLE);
+        break;
+
+        case TXPREPARESSTV:
+          switchTxState(TXIDLE);
+          prepareTXComplete(true);
         break;
 
         case TXSSTVIMAGE:
@@ -264,7 +271,7 @@ void txFunctions::run()
         break;
         case TXRESTART:
           switchTxState(TXIDLE);
-          break;
+        break;
         case TXTEST:
           sendTestPattern();
         break;
@@ -275,6 +282,31 @@ void txFunctions::run()
   addToLog("txFunc stopped",LOGTXFUNC);
   abort=false;
   txState=TXIDLE;
+}
+
+void txFunctions::setOnlineStatus(bool online, QString info)
+{
+  drmTxPtr->setOnlineStatus(online, info);
+}
+
+void txFunctions::who()
+{
+  drmTxPtr->who();
+}
+
+int txFunctions::calcTxTime(bool binary, int overhead)
+{
+  bool ok=false;
+  int txTime=0;
+  if (binary) {
+      ok=drmTxPtr->initDRMImage(true, binaryFilename);
+    }
+  else {
+      ok=drmTxPtr->initDRMImage(false, "");
+    }
+  if (ok) txTime = drmTxPtr->calcTxTime(overhead);
+  addToLog(QString("ok=%1, time=%2").arg(ok).arg(txTime), LOGTXFUNC);
+  return txTime;
 }
 
 void txFunctions::setDRMTxParams(drmTxParams params)
@@ -293,16 +325,57 @@ void txFunctions::startProgress(double duration)
 void txFunctions::stopThread()
 {
   abort=true;
- if(!isRunning()) return;
+  if(!isRunning()) return;
   while(abort && isRunning())
-  {
+    {
       qApp->processEvents();
     }
+}
+
+bool txFunctions::txBusy()
+{
+  if(isRunning() && txState!=TXIDLE)
+    {
+      return true;
+    }
+  return false;
 }
 
 void txFunctions::startTX(etxState state)
 {
   switchTxState(state);
+}
+
+void txFunctions::prepareTXComplete(bool ok)
+{
+  txPrepareCompleteEvent *ce;
+  ce=new txPrepareCompleteEvent(ok);
+  QApplication::postEvent( dispatcherPtr, ce );  // Qt will delete it when done
+}
+
+void txFunctions::prepareTX(etxState state)
+{
+  if (txState != TXIDLE) {
+      addToLog("txState is not TXIDLE",LOGTXFUNC);
+      return;
+    }
+
+  switch (state) {
+    case TXPREPARESSTV:
+    case TXSSTVIMAGE:    switchTxState(TXPREPARESSTV);
+    break;
+
+    case TXPREPAREDRMPIC:
+    case TXSENDDRMPIC:   switchTxState(TXPREPAREDRMPIC);
+    break;
+
+    case TXPREPAREDRMBINARY:
+    case TXSENDDRMBINARY:switchTxState(TXPREPAREDRMBINARY);
+    break;
+
+    default:
+      addToLog(QString("Invalid prepareTX state:%1").arg(state),LOGTXFUNC);
+    }
 }
 
 void txFunctions::waitTxOn()
@@ -408,7 +481,7 @@ void txFunctions:: sendFSKID()
   int idx;
   int l;
   int IDChar;
-  int Checksum=0;
+  int Checksum;
 
 
   if (myCallsign.isEmpty()) return;
@@ -416,6 +489,7 @@ void txFunctions:: sendFSKID()
 
   l=myCallsign.size();
   idx=0;
+
   // synthesPtr->sendTone(2.0,00,0,false);
   synthesPtr->sendTone(0.3,1500.,0,false);
   synthesPtr->sendTone(0.1,2100.,0,true);
@@ -510,6 +584,10 @@ void txFunctions::applyTemplate(imageViewer *ivPtr,QString templateFilename)
     }
 }
 
+void txFunctions::forgetTxFileName()
+{
+  drmTxPtr->forgetTxFileName();
+}
 
 void txFunctions::switchTxState(etxState newState)
 {

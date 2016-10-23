@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
-    <height>372</height>
+    <width>806</width>
+    <height>388</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,39 +30,34 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QCheckBox" name="enableHybridNotifyCheckBox">
-     <property name="text">
-      <string>Enable Notifications in Hybrid Mode </string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="_3">
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QCheckBox" name="enableHybridNotifySpecialServerCheckBox">
+      <widget class="QCheckBox" name="enableHybridNotifyCheckBox">
        <property name="text">
-        <string>Enable Special Server</string>
+        <string>Send RX Notifications in Hybrid Mode</string>
        </property>
        <property name="checked">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="enableHybridNotifySnoopCheckBox">
+       <property name="text">
+        <string>Check who else got it</string>
        </property>
       </widget>
      </item>
@@ -76,8 +71,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>20</height>
+         <width>28</width>
+         <height>24</height>
         </size>
        </property>
       </spacer>
@@ -94,6 +89,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="hybridNotifyPortSpinBox">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
@@ -104,22 +102,6 @@
         <number>21</number>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Preferred</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>
@@ -428,16 +410,19 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
      <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By default all RxNotification files are uploaded to a default server (&amp;quot;Enable Special Server&amp;quot;  not checked). If you wish to use your own server for RxNotifications in Hybrid mode then  you need to check &amp;quot;Enable Special Server&amp;quot; and fill in the details. See manual for more information.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="wordWrap">
-        <bool>true</bool>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="testNotifyPushButton">
@@ -445,6 +430,19 @@
         <string>Test connection</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

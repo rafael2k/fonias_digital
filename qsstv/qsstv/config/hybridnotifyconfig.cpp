@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 bool enableHybridNotify;
-bool enableHybridNotifySpecialServer;
+bool enableHybridNotifySnoop;
 int hybridNotifyPort;
 QString hybridNotifyRemoteHost;
 QString hybridNotifyRemoteDir;
@@ -31,7 +31,7 @@ void hybridNotifyConfig::readSettings()
   QSettings qSettings;
   qSettings.beginGroup("HYBRID_NOTIFY");
   enableHybridNotify=qSettings.value("enableHybridNotify",true).toBool();
-  enableHybridNotifySpecialServer=qSettings.value("enableHybridNotifySpecialServer",false).toBool();
+  enableHybridNotifySnoop=qSettings.value("enableHybridNotifySnoop",true).toBool();
   hybridNotifyPort=qSettings.value("hybridNotifyPort",21).toInt();
   hybridNotifyRemoteHost=qSettings.value("hybridNotifyRemoteHost","").toString();
   hybridNotifyRemoteDir=qSettings.value("hybridNotifyRemoteDir","").toString();
@@ -49,7 +49,7 @@ void hybridNotifyConfig::writeSettings()
   getParams();
   qSettings.beginGroup("HYBRID_NOTIFY");
   qSettings.setValue("enableHybridNotify",enableHybridNotify);
-  qSettings.setValue("enableHybridNotifySpecialServer",enableHybridNotifySpecialServer);
+  qSettings.setValue("enableHybridNotifySnoop",enableHybridNotifySnoop);
   qSettings.setValue("hybridNotifyPort",hybridNotifyPort);
   qSettings.setValue("hybridNotifyRemoteHost",hybridNotifyRemoteHost);
   qSettings.setValue("hybridNotifyRemoteDir",hybridNotifyRemoteDir);
@@ -62,7 +62,7 @@ void hybridNotifyConfig::writeSettings()
 void hybridNotifyConfig::getParams()
 {
   bool enableHybridNotifyCopy=enableHybridNotify;
-  bool enableHybridNotifySpecialServerCopy=enableHybridNotifySpecialServer;
+  bool enableHybridNotifySnoopCopy=enableHybridNotifySnoop;
   int hybridNotifyPortCopy=hybridNotifyPort;
   QString hybridNotifyRemoteHostCopy=hybridNotifyRemoteHost;
   QString hybridNotifyRemoteDirCopy=hybridNotifyRemoteDir;
@@ -72,7 +72,7 @@ void hybridNotifyConfig::getParams()
 
 
   getValue(enableHybridNotify,ui->enableHybridNotifyCheckBox);
-  getValue(enableHybridNotifySpecialServer,ui->enableHybridNotifySpecialServerCheckBox);
+  getValue(enableHybridNotifySnoop,ui->enableHybridNotifySnoopCheckBox);
   getValue(hybridNotifyPort,ui->hybridNotifyPortSpinBox);
   getValue(hybridNotifyRemoteHost,ui->hybridNotifyRemoteHostLineEdit);
   getValue(hybridNotifyRemoteDir,ui->hybridNotifyRemoteDirLineEdit);
@@ -81,7 +81,7 @@ void hybridNotifyConfig::getParams()
   getValue(hybridNotifyDir,ui->hybridNotifyDirLineEdit);
   changed=false;
   if(  enableHybridNotifyCopy!=enableHybridNotify
-       || enableHybridNotifySpecialServerCopy!=enableHybridNotifySpecialServer
+       || enableHybridNotifySnoopCopy!=enableHybridNotifySnoop
        || hybridNotifyPortCopy!=hybridNotifyPort
        || hybridNotifyRemoteHostCopy!=hybridNotifyRemoteHost
        || hybridNotifyRemoteDirCopy!=hybridNotifyRemoteDir
@@ -98,7 +98,7 @@ void hybridNotifyConfig::getParams()
 void hybridNotifyConfig::setParams()
 {
   setValue(enableHybridNotify,ui->enableHybridNotifyCheckBox);
-  setValue(enableHybridNotifySpecialServer,ui->enableHybridNotifySpecialServerCheckBox);
+  setValue(enableHybridNotifySnoop,ui->enableHybridNotifySnoopCheckBox);
   setValue(hybridNotifyPort,ui->hybridNotifyPortSpinBox);
   setValue(hybridNotifyRemoteHost,ui->hybridNotifyRemoteHostLineEdit);
   setValue(hybridNotifyRemoteDir,ui->hybridNotifyRemoteDirLineEdit);

@@ -10,6 +10,9 @@
 
 #include <QWidget>
 
+
+
+
 class drmTransmitter;
 namespace Ui {
 class txWidget;
@@ -24,6 +27,8 @@ public:
   ~txWidget();
   void init();
   void startTX(bool st, bool check=true);
+  void prepareTx();
+  void prepareTxComplete(bool ok);
   void writeSettings();
   void readSettings();
   imageViewer *getImagePtr();
@@ -63,10 +68,12 @@ public:
   void sendCWID();
 
 public slots:
+  void slotGetTXParams();
   void slotGetParams();
   void slotStart();
+  void slotUpload();
   void slotStop();
-  void slotDisplayStatusMessage(QString);
+//  void slotDisplayStatusMessage(QString);
 
   void slotGenerateSignal();
   void slotSweepSignal();
@@ -83,7 +90,9 @@ public slots:
   void slotProfileChanged(int );
   void slotImageChanged();
   void slotModeChanged(int);
+  void slotResizeChanged(int);
   void slotBinary();
+  void slotHybridToggled();
 
 signals:
   void modeSwitch(int);
@@ -100,12 +109,16 @@ private:
   QImage origImage;
   QImage resultImage;
   void applyTemplate();
+  void updateTxTime();
   imageViewer *imageViewerPtr;
   etransmissionMode currentTXMode;
   int sizeRatio;
   bool sizeRatioChanged;
   int drmProfileIdx;
   QString previewFilename;
+  int doTx;
+
+  void startTxImage();
 };
 
 #endif // TXWIDGET_H

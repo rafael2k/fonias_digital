@@ -137,6 +137,7 @@ void ftpConfig::setParams()
 void ftpConfig::slotTestFTPPushButton()
 {
   QString r1,r2;
+  QApplication::setOverrideCursor(Qt::WaitCursor);
   ftpInterface fInt("TestUploadConnection");
   ui->testFTPPushButton->setDisabled(true);
   getParams();
@@ -145,7 +146,8 @@ void ftpConfig::slotTestFTPPushButton()
   fInt.init();
   fInt.setupConnection(ftpRemoteHost,ftpPort,ftpLogin,ftpPassword,ftpRemoteDRMDirectory);
   r2=fInt.execFTPTest();
+  QApplication::restoreOverrideCursor();
   ui->testFTPPushButton->setDisabled(false);
-  QMessageBox::information(this,"Testing Connection","test",QString("SSTV: %1\nDRM: %2").arg(r1).arg(r2));
+  QMessageBox::information(this,"Testing Connection","",QString("SSTV: %1\nDRM: %2").arg(r1).arg(r2));
 }
 

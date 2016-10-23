@@ -33,6 +33,7 @@
 
 class demodulator;
 class sourceDecoder;
+class ftpInterface;
 
 extern int input_samples_buffer_request;
 extern int symbols_per_frame_list[4];
@@ -123,8 +124,6 @@ extern float lastAvgSNR;
 extern bool avgSNRAvailable;
 extern sourceDecoder *srcDecoder;
 extern QString drmCallsign;
-
-
 
 
 #endif

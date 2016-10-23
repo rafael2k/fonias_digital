@@ -156,6 +156,3 @@ float lastAvgSNR;
 bool avgSNRAvailable;
 QString drmCallsign;
 
-
-
-

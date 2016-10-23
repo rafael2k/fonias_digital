@@ -14,52 +14,12 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>1</number>
-   </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
    <item>
-    <widget class="QCheckBox" name="enableHybridRxCheckBox">
-     <property name="text">
-      <string>Enable Reception in Hybrid Mode </string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="_3">
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QCheckBox" name="enableSpecialServerCheckBox">
+      <widget class="QCheckBox" name="enableHybridRxCheckBox">
        <property name="text">
-        <string>Enable Special Server</string>
+        <string>Enable Reception in Hybrid Mode </string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -94,6 +54,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="hybridFtpPortSpinBox">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
@@ -428,16 +391,19 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>By default all hybrid files are uploaded to a default server (&quot;Enable Special Server&quot;  not checked). If you wish to use your own server for sending in Hybrid mode then  you need to check &quot;Enable Special Server&quot; and fill in the details. See manual for more information.</string>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="wordWrap">
-        <bool>true</bool>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="testHybridPushButton">
@@ -445,6 +411,19 @@
         <string>Test connection</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

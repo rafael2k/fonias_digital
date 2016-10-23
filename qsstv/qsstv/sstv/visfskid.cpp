@@ -250,7 +250,7 @@ void fskIdDecoder::extract(unsigned int syncSampleCtr, bool narrow)
           {
             if(waitEndFreq(1600,1800))
               {
-                qDebug() << sampleCounter+i-startSampleCounter;
+//                qDebug() << sampleCounter+i-startSampleCounter;
                 if(((sampleCounter+i-startSampleCounter)>=FSKMIN1500))
 //                        && ((sampleCounter+i-startSampleCounter)<2*FSKMIN1500))
                   {

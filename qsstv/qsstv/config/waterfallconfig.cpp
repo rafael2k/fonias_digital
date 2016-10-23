@@ -7,6 +7,8 @@ QString startPicWF;
 QString endPicWF;
 QString fixWF;
 QString bsrWF;
+QString startBinWF;
+QString endBinWF;
 QString wfFont;
 int wfFontSize;
 bool wfBold;
@@ -34,6 +36,8 @@ void waterfallConfig::readSettings()
   endPicWF=qSettings.value("endPicWF","END PIC").toString();
   fixWF=qSettings.value("fixWF","FIX").toString();
   bsrWF=qSettings.value("bsrWF","BSR").toString();
+  startBinWF=qSettings.value("startBinWF","START BIN").toString();
+  endBinWF=qSettings.value("endBinWF","END BIN").toString();
   wfFont=qSettings.value("wfFont","Arial").toString();
   wfFontSize=qSettings.value("wfFontSize",12).toInt();
   wfBold=qSettings.value("wfBold",false).toBool();
@@ -51,6 +55,8 @@ void waterfallConfig::writeSettings()
   qSettings.setValue("endPicWF",endPicWF);
   qSettings.setValue("fixWF",fixWF);
   qSettings.setValue("bsrWF",bsrWF);
+  qSettings.setValue("startBinWF",startBinWF);
+  qSettings.setValue("endBinWF",endBinWF);
   qSettings.setValue("wfFont",wfFont);
   qSettings.setValue("wfFontSize",wfFontSize);
   qSettings.setValue("wfBold",wfBold);
@@ -65,6 +71,8 @@ void waterfallConfig::getParams()
   getValue(endPicWF,ui->endPicTextEdit);
   getValue(fixWF,ui->fixTextEdit);
   getValue(bsrWF,ui->bsrTextEdit);
+  getValue(startBinWF,ui->startBinTextEdit);
+  getValue(endBinWF,ui->endBinTextEdit);
   getValue(wfFont,ui->fontComboBox);
   getValue(wfFontSize,ui->sizeSpinBox);
   getValue(wfBold,ui->boldCheckBox);
@@ -77,6 +85,8 @@ void waterfallConfig::setParams()
   setValue(endPicWF,ui->endPicTextEdit);
   setValue(fixWF,ui->fixTextEdit);
   setValue(bsrWF,ui->bsrTextEdit);
+  setValue(startBinWF,ui->startBinTextEdit);
+  setValue(endBinWF,ui->endBinTextEdit);
   ui->fontComboBox->blockSignals(true);
   ui->sizeSpinBox->blockSignals(true);
   setValue(sampleString,ui->sampleLineEdit);

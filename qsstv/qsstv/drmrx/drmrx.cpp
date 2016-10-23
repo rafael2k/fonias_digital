@@ -71,6 +71,5 @@ void drmRx::run(DSPFLOAT *dataPtr)
   ce2->waitFor(&done);
   QApplication::postEvent(dispatcherPtr, ce2);
   while(!done) { usleep(10);}
-
 }
 

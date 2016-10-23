@@ -120,12 +120,12 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
 
   // setup connections
 
+  connect(ui->actionSaveWaterfallImage,SIGNAL(triggered()),this, SLOT(slotSaveWaterfallImage()));
   connect(ui->actionExit,SIGNAL(triggered()),this, SLOT(slotExit()));
   connect(ui->actionConfigure,SIGNAL(triggered()),this, SLOT(slotConfigure()));
   connect(ui->actionCalibrate,SIGNAL(triggered()),this, SLOT(slotCalibrate()));
   connect(ui->actionAboutQSSTV, SIGNAL(triggered()),SLOT(slotAboutQSSTV()));
   connect(ui->actionAboutQt, SIGNAL(triggered()),SLOT(slotAboutQt()));
-//  connect(ui->actionFullScreen, SIGNAL(triggered()),SLOT(slotFullScreen()));
   connect(ui->actionUsersGuide, SIGNAL(triggered()),SLOT(slotDocumentation()));
   connect(idPushButton, SIGNAL(clicked()), this, SLOT(slotSendWFID()));
   connect(cwPushButton, SIGNAL(clicked()), this, SLOT(slotSendCWID()));
@@ -156,7 +156,6 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
   connect(ui->actionClearScope,SIGNAL(triggered()),this, SLOT(slotClearScope()));
   connect(ui->actionDumpSamplesPerLine,SIGNAL(triggered()),this, SLOT(slotDumpSamplesPerLine()));
   connect(ui->actionTxTestPattern,SIGNAL(triggered()),this, SLOT(slotTxTestPattern()));
-
 
 #else
   ui->menuOptions->removeAction(ui->actionDumpSamplesPerLine);
@@ -300,13 +299,49 @@ void mainWindow::setNewFont()
   //  txMW->setFont(fnt);
 }
 
+void mainWindow::slotSaveWaterfallImage()
+{
+  QImage *wf = ui->spectrumFrame->getImage();
+  if (wf) {
+     double freq=0;
+     QDateTime now=QDateTime::currentDateTime();
+     QString fn="waterfall-"+now.toString("yyyyMMddhhmmss")+".jpg";
+
+     QImage im(wf->width()+2, wf->height()+22, QImage::Format_RGB32);
+     QPainter p(&im);
+
+     im.fill(Qt::black);
+     p.setPen(Qt::lightGray);
+     p.drawImage(2,20,*wf);
+     p.drawRect(0,0,wf->width()+1,wf->height()+21);
+
+     //TODO: rig frequency etc
+     rigControllerPtr->getFrequency(freq);
+     if (freq>0)
+        p.drawText(1,15, QString("%1 MHz").arg(freq/1000000.0,1,'f',6));
+     else
+        p.drawText(1,15, "no freq");
+
+     if (im.save(fn, "jpg"))
+       {
+        statusBarPtr->showMessage("Saved "+fn);
+        }
+     else {
+        statusBarPtr->showMessage("Error saving image");
+        }
+     delete wf;
+     }
+}
+
 void mainWindow::slotExit()
 {
   int exit;
   exit=QMessageBox::information(this, tr("Quit..."),tr("Do you really want to quit QSSTV?"), QMessageBox::Ok, QMessageBox::Cancel);
   if(exit==QMessageBox::Ok)
     {
+      statusBarPtr->showMessage("Cleaning up...");
       dispatcherPtr->idleAll();
+      dispatcherPtr->setOnlineStatus(false);
       rxWidgetPtr->functionsPtr()->stopThread();
       txWidgetPtr->functionsPtr()->stopThread();
       if(soundIOPtr) soundIOPtr->stopSoundThread();

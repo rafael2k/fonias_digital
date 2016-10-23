@@ -9,6 +9,9 @@ extern QString myLastname;
 extern QString myFirstname;
 extern QString lastReceivedCall;
 
+extern bool    onlineStatusEnabled;
+extern QString onlineStatusText;
+
 
 namespace Ui {
 class operatorConfig;

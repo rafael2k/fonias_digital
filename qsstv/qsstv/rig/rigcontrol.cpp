@@ -68,7 +68,6 @@ bool rigControl::init()
     int retcode;
     if(!catParams.enableCAT) return false;
 
-    addToLog(QString("rigcontrol:init myport pathname: %1").arg(myport.pathname),LOGRIGCTRL);
     catParams.radioModelNumber=getModelNumber(getRadioModelIndex());
     my_rig = rig_init(catParams.radioModelNumber);
     if(!my_rig)

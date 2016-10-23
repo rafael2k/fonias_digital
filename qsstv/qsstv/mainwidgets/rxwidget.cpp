@@ -13,7 +13,7 @@
 #include "guiconfig.h"
 #include "mainwindow.h"
 #include "configparams.h"
-
+#include "ftp.h"
 
 
 rxWidget::rxWidget(QWidget *parent):QWidget(parent),ui(new Ui::rxWidget)
@@ -42,6 +42,9 @@ rxWidget::rxWidget(QWidget *parent):QWidget(parent),ui(new Ui::rxWidget)
   connect(&rxFunctionsPtr->sstvRxPtr->syncWideProc,SIGNAL(callReceived(QString)),SLOT(slotNewCall(QString)));
   connect(rxFunctionsPtr->sstvRxPtr,SIGNAL(resetCall()),SLOT(slotResetCall()));
   connect(ui->logPushButton,SIGNAL(clicked()),SLOT(slotLogCall()));
+  connect(ui->whoPushButton,SIGNAL(clicked()),SLOT(slotWho()));
+  notifyRXIntf = new ftpInterface("RX Notification FTP");
+
 }
 
 rxWidget::~rxWidget()
@@ -49,6 +52,7 @@ rxWidget::~rxWidget()
   writeSettings();
   rxFunctionsPtr->terminate();
   delete rxFunctionsPtr;
+  delete notifyRXIntf;
 }
 
 void rxWidget::init()
@@ -85,6 +89,8 @@ void rxWidget::init()
   if(slowCPU || lowRes)
     {
       ui->rxNotificationList->hide();
+      ui->whoPushButton->hide();
+//      ui->whoSpacer->hide();
     }
 }
 
@@ -223,6 +229,7 @@ void rxWidget::slotSave()
 {
   QDateTime dt(QDateTime::currentDateTime().toUTC()); //this is compatible with QT 4.6
   QString path;
+  QString info;
   dirDialog d(this);
   if(transmissionModeIndex==TRXSSTV)
   {
@@ -235,12 +242,17 @@ void rxWidget::slotSave()
     return;
   }
 
+  info="";
   QString fileName=d.saveFileName(path,"*","png");
   if (fileName==QString::null) return ;
   getImageViewerPtr()->save(fileName,defaultImageFormat,true,false);
-  dispatcherPtr->saveImage(fileName);
+  dispatcherPtr->saveImage(fileName,info);
 }
 
+void rxWidget::slotWho()
+{
+  dispatcherPtr->who();
+}
 
 void rxWidget::setSettingsTab()
 {

@@ -32,7 +32,7 @@
    <item>
     <widget class="QTabWidget" name="configTabWidget">
      <property name="currentIndex">
-      <number>12</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="operatorTab">
       <attribute name="title">

@@ -3,7 +3,11 @@
 
 
 #include <QObject>
+#include <QFileInfo>
+#include <QTemporaryFile>
 
+
+#include "hybridcrypt.h"
 #include "drmtransmitter.h"
 #include "reedsolomoncoder.h"
 #include "ftp.h"
@@ -31,8 +35,13 @@ public:
   ~drmTx();
   void init();
   void start();
+  void forgetTxFileName();
+  QString getTxFileName(QString fileName);
+  bool ftpDRMHybrid(QString fileName, QString destName);
   bool initDRMImage(bool binary, QString fileName);
-  bool ftpDRMHybridNotifyCheck(QString fn);
+  void updateTxList();
+  void who();
+  void setOnlineStatus(bool online, QString info="");
   
   void sendBSR(QByteArray *p,drmTxParams dp);
   int processFIX(QByteArray bsrByteArray);
@@ -48,21 +57,29 @@ public:
     drmTxParameters=params;
   }
  double calcTxTime(int overheadTime);
+ void clearLastHybridUpload();
 
 signals:
 
 private slots:
-  void rxNotification(QString info);
+//  void rxNotification(QString info);
+  void slotWhoResult();
 
 private:
     void runRx();
-    bool ftpDRMHybrid(QString fn);
+    bool ftpDRMHybridNotifyCheck(QString fn);
+    void setupStatusIntf();
     drmTransmitter *txDRM;
     QList <txSession> txList;
     drmTxParams drmTxParameters;
+    drmTxParams drmTxHybridParameters;
+    QFileInfo   drmTxFileName;
+    QString	drmTxStamp;
+    int		hybridTxCount;
     QByteArray baDRM;
-    QString ftpErrorStr;
-    ftpInterface *notifyIntf;
+    QString lastHybridUpload;
+    QTemporaryFile ftmp;
+
 };
 
 #endif // DRMTX_H

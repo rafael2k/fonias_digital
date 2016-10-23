@@ -11,213 +11,339 @@
 #include "ftp.h"
 #include "hybridcrypt.h"
 
-#include <QFileInfo>
-
-
-
 
 drmTx::drmTx(QObject *parent) :
   QObject(parent)
 {
   txDRM=new drmTransmitter;
   txList.clear();
-  notifyIntf=NULL;
 
+  hybridTxCount=1;
 }
 
 drmTx::~drmTx()
 {
   delete txDRM;
+
 }
 
 void drmTx::init()
 {
-  if(notifyIntf==NULL)
-  {
-      notifyIntf = new ftpInterface("HybridTXNotify");
-      connect(notifyIntf, SIGNAL(notification(QString)), this, SLOT(rxNotification(QString)));
-  }
+  connect(onlineStatusIntf, SIGNAL(listingComplete()), this, SLOT(slotWhoResult()));
 }
 
 void drmTx::start()
 {
+  statusBarMsgEvent *statBar;
+  statBar=new statusBarMsgEvent("Sending "+drmTxFileName.fileName());
+  QApplication::postEvent(dispatcherPtr,statBar);
   txDRM->start(true);
+
+
 }
 
+void drmTx::forgetTxFileName()
+{
+  drmTxStamp="";
+}
 
+QString drmTx::getTxFileName(QString fileName)
+{
+  QString prefix;
+  QFileInfo finf;
+
+  if(useHybrid)
+    {
+      prefix=QString("de_"+myCallsign+"-%1-").arg(hybridTxCount);
+    }
+  else {
+      // Once allocated, keep the same TX name...
+      // cleared by applyTemplate() or forgetTxFileName()
+      if (drmTxStamp.isEmpty())
+        drmTxStamp=QDateTime::currentDateTime().toUTC().toString("yyyyMMddHHmmss");
+      prefix = drmTxStamp+"-";
+    }
+
+  if(fileName.isEmpty())
+    {
+      finf.setFile(txWidgetPtr->getImageViewerPtr()->getCompressedFilename());
+    }
+  else
+    {
+      finf.setFile(fileName);
+    }
+
+  drmTxFileName.setFile(prefix + finf.fileName());
+  return drmTxFileName.fileName();
+}
 
 bool drmTx::initDRMImage(bool binary,QString fileName)
 {
   eRSType rsType;
   reedSolomonCoder rsd;
-  QString fn;
-  QString ext;
-  QFileInfo finf;
   QFile inf;
-  hybridCrypt hc;
-  init();
   setTxParams(drmParams);
-  // we need to save it as a jpg file
-  if(binary)
-    {
-      finf.setFile(fileName);
-    }
-  else
-    {
-      finf.setFile(txWidgetPtr->getImageViewerPtr()->getFilename());
-    }
-  if(useHybrid)
-    {
-      fn="de_"+myCallsign+"-1-"+finf.baseName();
-    }
-  else
-    {
-      fn=QDateTime::currentDateTime().toUTC().toString("yyyyMMddHHmmss");
-      fn+="-"+finf.baseName();
-    }
-  ext=finf.suffix();
-  fixBlockList.clear();
-  if(txList.count()>5) txList.removeFirst();
-  txList.append(txSession());
-  txList.last().filename=fn;
-  txList.last().extension=ext;
+
+  if (binary && fileName.isEmpty()) return false;
+  if (!binary && !txWidgetPtr->getImageViewerPtr()->hasValidImage()) return false;
+
+  addToLog(QString("bin=%1, fileName=%2").arg(binary).arg(fileName),LOGDRMTX);
+
+  // make sure drmTxFileName is up to date
+  getTxFileName(fileName);
+
   if(!useHybrid)
     {
-      txList.last().drmParams=drmTxParameters;
       if(binary)
         {
           inf.setFileName(fileName);
           if(!inf.open(QIODevice::ReadOnly))
             {
+              addToLog(QString("Unable to open '%1' for read").arg(fileName),LOGDRMTX);
               return false;
             }
-          txList.last().ba=inf.readAll();
-
+          baDRM=inf.readAll();
         }
       else
         {
-          if(!txWidgetPtr->getImageViewerPtr()->copyToBuffer(&(txList.last().ba)))
-          {
+          if(!txWidgetPtr->getImageViewerPtr()->copyToBuffer(&baDRM))
+            {
+              addToLog(QString("Unable to copy image from txWidget->viewer"),LOGDRMTX);
               return false;
-          }
-          txList.last().extension="jp2";
+            }
+          drmTxFileName.setFile(drmTxFileName.completeBaseName()+".jp2");
         }
 
-      rsType=(eRSType)txList.last().drmParams.reedSolomon;
-      baDRM=txList.last().ba;
+      rsType=(eRSType)drmTxParameters.reedSolomon;
       if(rsType!=RSTNONE)
         {
-          rsd.encode(baDRM,txList.last().extension,rsType);
-          txDRM->init(&baDRM,txList.last().filename,rsTypeStr[rsType],txList.last().drmParams);
+          rsd.encode(baDRM,drmTxFileName.suffix(),rsType);
+          txDRM->init(&baDRM,drmTxFileName.baseName(),rsTypeStr[rsType],drmTxParameters);
         }
       else
         {
-          txDRM->init(&baDRM,txList.last().filename,txList.last().extension,txList.last().drmParams);
+          txDRM->init(&baDRM,drmTxFileName.baseName(),drmTxFileName.suffix(),drmTxParameters);
         }
     }
   else
     {
-      txList.last().drmParams.bandwith=1; // bw 2.2
-      txList.last().drmParams.robMode=2;  // mode E
-      txList.last().drmParams.interleaver=0; // long
-      txList.last().drmParams.protection=0; // high
-      txList.last().drmParams.qam=0; // 4bit QAM
-      txList.last().drmParams.callsign=myCallsign;
+      hybridCrypt hc;
+
+      drmTxHybridParameters.bandwith=1; // bw 2.2
+      drmTxHybridParameters.robMode=2;  // mode E
+      drmTxHybridParameters.interleaver=0; // long
+      drmTxHybridParameters.protection=0; // high
+      drmTxHybridParameters.qam=0; // 4bit QAM
+      drmTxHybridParameters.callsign=myCallsign;
 
       // we have to fill in the body
-      txList.last().ba.clear();
-      hc.enCrypt(&txList.last().ba);
-      txDRM->init(&txList.last().ba,txList.last().filename,txList.last().extension,txList.last().drmParams);
-      if(!ftpDRMHybrid(txList.last().filename+"."+finf.suffix()))
-      {
-        return false;
-      }
-      ftpDRMHybridNotifyCheck(txList.last().filename+"."+finf.suffix());
+      baDRM.clear();
+      hc.enCrypt(&baDRM);
+      txDRM->init(&baDRM,drmTxFileName.baseName(),drmTxFileName.suffix(),drmTxHybridParameters);
+      hybridTxCount++;
     }
-  // transportID is set
-  txList.last().transportID=txTransportID;
   return true;
 }
 
-bool drmTx::ftpDRMHybrid(QString fn)
+void drmTx::updateTxList()
 {
-//  char *data;
-//  unsigned int ct;
-  eftpError ftpResult;
-  QByteArray testBA;
-  QByteArray ba;
-  QTemporaryFile ftmp;
-  QFileInfo finf;
-  finf.setFile(fn);
-  QString changedFn;
-  ftpInterface ftpIntf("HybridTX");
-  hybridCrypt hc;
-  ftpIntf.setupConnection(hc.host(),hc.port(),hc.user(),hc.passwd(),hc.dir()+"/"+hybridFtpHybridFilesDirectory);
-  if(!txWidgetPtr->getImageViewerPtr()->copyToBuffer(&ba))
-    {
-      return false;
-    }
-  if(!ftmp.open()) return false;
-  ftmp.write(ba);
-  ftmp.close();
-  changedFn=finf.completeBaseName()+".jp2";
+  fixBlockList.clear();
+  if ((txList.count()>0) && (txList.last().transportID == txTransportID)) return;
 
-  ftpResult=ftpIntf.uploadFile(ftmp.fileName(),changedFn,true);
-  switch(ftpResult)
-    {
-    case FTPCANCELED:
-      ftpErrorStr="Connection Canceled";
-    break;
-    case FTPOK:
-      break;
-    case FTPERROR:
-      ftpErrorStr=ftpIntf.getLastError();
-      break;
-    case FTPNAMEERROR:
-      ftpErrorStr="Error in filename";
-      break;
-    case FTPTIMEOUT:
-      ftpErrorStr="FTP timed out";
-      break;
+  if(txList.count()>5) txList.removeFirst();
+
+  txList.append(txSession());
+  txList.last().filename=drmTxFileName.baseName();
+  txList.last().extension=drmTxFileName.suffix();
+  txList.last().ba=baDRM;
+
+  if (useHybrid) {
+      txList.last().drmParams=drmTxHybridParameters;
+      ftpDRMHybridNotifyCheck(txList.last().filename+"."+txList.last().extension);
     }
-  addToLog("sendDRMHybrid",LOGDRMTX);
-  return ftpResult==FTPOK;
+  else {
+      txList.last().drmParams=drmTxParameters;
+    }
+
+  // transportID is set
+  txList.last().transportID=txTransportID;
 }
 
+bool drmTx::ftpDRMHybrid(QString fileName, QString destName)
+{
+  QByteArray ba;
+
+  QString ftpErrorStr;
+  ftpSetupEvent *ftpSetup;
+  ftpUploadFileEvent *ftpUpload;
+
+  addToLog(QString("destName='%1' last='%2'").arg(destName).arg(lastHybridUpload),LOGFTP);
+
+  if (destName == lastHybridUpload)
+    {
+      addToLog(QString("%1 already uploaded").arg(destName), LOGFTP);
+      return true;
+    }
+  ftpSetup=new ftpSetupEvent(hybridTxIntf,hybridFtpRemoteHost,hybridFtpPort,hybridFtpLogin,hybridFtpPassword,hybridFtpRemoteDirectory+"/"+hybridFtpHybridFilesDirectory);
+
+  QApplication::postEvent(dispatcherPtr,ftpSetup);
+
+  //  hybridTxIntf->setupConnection(hybridFtpRemoteHost,hybridFtpPort,hybridFtpLogin,hybridFtpPassword,hybridFtpRemoteDirectory+"/"+hybridFtpHybridFilesDirectory);
+    hybridTxIntf->closeWhenDone();
+
+  if (fileName.isEmpty())
+    {
+      txWidgetPtr->getImageViewerPtr()->copyToBuffer(&ba);
+      if(!ftmp.open()) return false;
+      ftmp.write(ba);
+      ftmp.close();
+      ftpUpload=new ftpUploadFileEvent(hybridTxIntf,ftmp.fileName(),destName,true);
+    }
+  else
+    {
+      ftpUpload=new ftpUploadFileEvent(hybridTxIntf,fileName,destName,true);
+    }
+  QApplication::postEvent(dispatcherPtr,ftpUpload);
+  while(dispatcherPtr->hybridTxDone==DFTPWAITING)
+    {
+      qApp->processEvents();
+    }
+
+
+  if(dispatcherPtr->hybridTxDone!=DFTPOK)
+    {
+      ftpErrorStr=hybridTxIntf->getLastError();
+      addToLog(QString("ftpDRMHybrid Upload Error: %1").arg(ftpErrorStr),LOGDRMTX);
+      displayMBoxEvent *mbe = new displayMBoxEvent("Upload Error",ftpErrorStr);
+      QApplication::postEvent( dispatcherPtr, mbe );
+      return false;
+    }
+  lastHybridUpload=destName;
+
+  addToLog(QString("hybridTxCount updated to %1").arg(hybridTxCount),LOGDRMTX);
+  return true;
+}
+
+void drmTx::clearLastHybridUpload()
+{
+  addToLog(QString("Clearing lasHybridUpload, was: %1").arg(lastHybridUpload),LOGFTP);
+  lastHybridUpload = "";
+}
 
 bool drmTx::ftpDRMHybridNotifyCheck(QString fn)
 {
   txDRMNotifyEvent *txne;
+  ftpSetupEvent *ftpSetup;
+  notifyCheckEvent *ce;
   if (!enableHybridNotify) return false;
   
-  if (enableHybridNotifySpecialServer) {
-     notifyIntf->setupConnection(hybridNotifyRemoteHost, hybridNotifyPort,
-              hybridNotifyLogin, hybridNotifyPassword,
-              hybridNotifyRemoteDir+"/"+hybridNotifyDir);
-     }
-  else {
-     // notification to vk4aes.com (EasyPal compatible)
-     notifyIntf->setupConnection("vk4aes.com",21,"vk4aes","10mar1936","/RxOkNotifications1");
-                    
-     // or notification to image server
-     //notifyIntf->setupConnection(hc.host(),hc.port(),hc.user(),hc.passwd(),hc.dir()+"/RxOkNotifications1");
-     }
-     
+//  notifyTXIntf->setupConnection(hybridFtpRemoteHost, hybridFtpPort,
+//                                hybridFtpLogin, hybridFtpPassword,
+//                                hybridFtpRemoteDirectory+"/"+hybridFtpHybridFilesDirectory);
+  ftpSetup=new ftpSetupEvent(notifyTXIntf,hybridNotifyRemoteHost,hybridNotifyPort,hybridNotifyLogin,hybridNotifyPassword,hybridNotifyRemoteDir+"/RxOkNotifications1");
+  QApplication::postEvent(dispatcherPtr,ftpSetup);
+  //    }
+  //  else
+  //    // NOT CORRECT !!!  there is no default;
+  //    {
+  //      hybridCrypt hc;
+  //      // notification to last RX Hybrid Image server or custom server if selected
+  //      notifyTXIntf->setupConnection(hc.host(),hc.port(),hc.user(),hc.passwd(),hc.dir()+"/RxOkNotifications1");
+  //    }
+
   txne = new txDRMNotifyEvent("");
   QApplication::postEvent( dispatcherPtr, txne );
-  
-  notifyIntf->startNotifyCheck(fn, 15, 60/15, true);
+  ce=new notifyCheckEvent(notifyTXIntf,fn, 15, 60/15, true);
+  QApplication::postEvent( dispatcherPtr, ce );
+
+//  notifyTXIntf->startNotifyCheck(fn, 15, 60/15, true);
   return true;
 }
 
-void drmTx::rxNotification(QString info)
+//void drmTx::rxNotification(QString info)
+//{
+//  if (info != "") {
+//      txDRMNotifyAppendEvent *txne = new txDRMNotifyAppendEvent(info);
+//      QApplication::postEvent( dispatcherPtr, txne );
+//    }
+//}
+
+
+void drmTx::setupStatusIntf()
 {
-  if (info != "") {
-     txDRMNotifyAppendEvent *txne = new txDRMNotifyAppendEvent(info);
-     QApplication::postEvent( dispatcherPtr, txne );
-  }
+  if (!hybridNotifyRemoteHost.isEmpty())
+    {
+      onlineStatusIntf->setupConnection(hybridNotifyRemoteHost, hybridNotifyPort,
+                                        hybridNotifyLogin, hybridNotifyPassword,
+                                        hybridNotifyRemoteDir+"/OnlineCallsigns1");
+
+      onlineStatusIntf->closeWhenDone();
+      onlineStatusIntf->hideProgress();
+    }
 }
 
+void drmTx::who()
+{
+  // get a list of online callsigns
+  setupStatusIntf();
+  onlineStatusIntf->getListing("*");
+
+  rxDRMNotifyEvent *rxne = new rxDRMNotifyEvent("Retrieving List...");
+  QApplication::postEvent( dispatcherPtr, rxne );
+
+  // slotWhoResult is called when we have the info
+}
+
+void drmTx::slotWhoResult()
+{
+  int i;
+  QString info="Online User List\n";
+
+  QList <QUrlInfo> users = onlineStatusIntf->getListingResults();
+  onlineStatusIntf->clearListingResults();
+
+  for (i=0; i<users.count(); i++) {
+      info += users.at(i).name()+"\n";
+    }
+
+  // put it in the RX widget notifications box
+  rxDRMNotifyEvent *rxne = new rxDRMNotifyEvent(info);
+  QApplication::postEvent( dispatcherPtr, rxne );
+}
+
+
+void drmTx::setOnlineStatus(bool online, QString info)
+{
+  // we can use onlineStatusInt directly because this function is only used from the main thread
+
+  addToLog(QString("Call:%1 online:%2, info:%3").arg(myCallsign).arg(online).arg(info),LOGFTP);
+
+  if (onlineStatusEnabled) {
+      setupStatusIntf();
+      if (online)
+        {
+          onlineStatusIntf->uploadData(QByteArray("Dummy\r\n"), myCallsign+"."+info);
+        }
+      else
+        {
+          onlineStatusIntf->mremove(myCallsign+".*");
+        }
+    }
+
+  if (enableHybridRx && !online)
+    {
+      hybridCrypt hc;
+      hybridTxIntf->setupConnection(hc.host(),hc.port(),hc.user(),hc.passwd(),hc.dir()+"/"+hybridFtpHybridFilesDirectory);
+      hybridTxIntf->mremove("de_"+myCallsign+"-*"); // Delete hybrid images sent
+      hybridTxIntf->closeWhenDone();
+    }
+
+  if (!online) {
+      onlineStatusIntf->wait(-1);
+      hybridTxIntf->wait(-1);
+      notifyTXIntf->wait(-1);
+    }
+}
 
 double  drmTx::calcTxTime(int overheadTime)
 {
@@ -232,7 +358,7 @@ int drmTx::processFIX(QByteArray bsrByteArray)
 {
   int i,j;
   bool inSeries;
-//  bool extended; // todo check use of extended
+  //  bool extended; // todo check use of extended
   bool done;
   int block;
   int trID,lastBlock;
@@ -253,7 +379,7 @@ int drmTx::processFIX(QByteArray bsrByteArray)
   fixBlockList.append(lastBlock++);
   inSeries=false;
   done=false;
-//  extended=false;
+  //  extended=false;
   for(i=4;(!done)&&i<sl.count();i++)
     {
       block=sl.at(i).toInt();
@@ -278,7 +404,7 @@ int drmTx::processFIX(QByteArray bsrByteArray)
   // check if we have a filename beyond -99
   if((i+1)<sl.count()) // we need an additional 2 entries (filename and mode)
     {
-//      extended=true;
+      //      extended=true;
       //      fileName=sl.at(i++); // not used at this moment
     }
   return trID;
@@ -335,5 +461,7 @@ txSession *drmTx::getSessionPtr(uint transportID)
 
 void drmTx::applyTemplate(QString templateFilename, bool useTemplate, imageViewer *ivPtr)
 {
+  clearLastHybridUpload();
+  forgetTxFileName();
   ivPtr->setParam(templateFilename,useTemplate);
 }

@@ -31,11 +31,12 @@ public:
   void displayWaterfall(bool wf) {showWaterfall=wf;}
   void setMarkers(int mrk1=0, int mrk2=0, int mrk3=0);
   void setAvg(double d) {avgVal=d;}
+  QImage *getImage();
 
 private:
-
+  void drawMarkers(QPainter *painter, int top, int bot);
   void paintEvent(QPaintEvent *p);
-//  void mousePressEvent( QMouseEvent *e );
+  //  void mousePressEvent( QMouseEvent *e );
   int windowSize;
   int fftLength;
   int samplingrate;
@@ -43,13 +44,13 @@ private:
   double *arMagWAvg;
   double maxMagnitude;
   QPolygon *fftArray;
-//  bool ready;
+  //  bool ready;
   bool showWaterfall;
   double fftMax;
   double range;
   QImage *imagePtr;
   QImage scaledImage;
-//  void setSize(int w,int h);
+  //  void setSize(int w,int h);
   QMutex mutex;
   int marker1;
   int marker2;

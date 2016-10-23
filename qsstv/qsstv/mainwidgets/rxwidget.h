@@ -28,12 +28,13 @@ public:
   void startRX(bool st);
   rxFunctions *functionsPtr() {return rxFunctionsPtr;}
   imageViewer *getImageViewerPtr(){ return imageViewerPtr;}
-//  spectrumWidget *fftDisplayPtr() ;
+  //  spectrumWidget *fftDisplayPtr() ;
   vuMeter *vMeterPtr();
   vuMeter *sMeterPtr();
   drmConstellationFrame *mscWdg() {return ui->drmMSCWidget;}
   drmConstellationFrame *facWdg() {return ui->drmFACWidget;}
-  void setDRMStatusText(QString txt) {
+  void setDRMStatusText(QString txt)
+  {
     ui->drmStatusLineEdit->clear();
     ui->drmStatusLineEdit->appendPlainText(txt);
   }
@@ -44,9 +45,9 @@ public:
   void appendDRMNotifyText(QString txt) {
     ui->rxNotificationList->appendPlainText(txt);
   }
-//  drmPSDFrame *psdWdg() {return ui->drmPSDWidget;}
+  //  drmPSDFrame *psdWdg() {return ui->drmPSDWidget;}
   drmStatusFrame *statusWdg() {return ui->drmStatusWidget;}
-//  int getFilterIndex();
+  //  int getFilterIndex();
   void init();
   void setSSTVStatusText(QString txt);
   void setSettingsTab();
@@ -63,6 +64,7 @@ private slots:
   void slotLogCall();
   void slotErase();
   void slotSave();
+  void slotWho();
 
 signals:
   void modeSwitch(int);

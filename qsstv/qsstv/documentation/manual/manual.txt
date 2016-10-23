@@ -75,6 +75,23 @@ QSSTV 9.2.x has the following new features compared to QSSTV 8.2.x
 
 
 \page changelog Change log
+
+\li 20161022 QSSTV 9.2.4
+- some minor bugfixing
+- eliminated online status setting in Config Notication tab (doubled with setting in Operator settings)
+- bug fix: incremental counter on filename wih hybrid mode
+- added filename to statusbar when sending DRM image
+
+\li 20161021 QSSTV 9.2.3
+- bug fix: memory leak in tx DRM when loading/resizing images
+- faster compression of tx images
+- bug-fix: hybrid mode saved images with wrong file extension. Receivers tried downloading wrong file.
+- Added all the patches (more then 20) from Mike, VK6M: rx/tx notifications and a large number of patches for image handling
+- Added new features (such a save waterfall image) implmented by Mike, VK6M
+- Todo: update the documentation !
+
+
+
 \li 20160929 QSSTV 9.2.2
 - added CTRL_F keyboard shortcut to switch to and from full screen. This is mainly used on low resolution screens where the top and/or
 bottom taskbars are masking part of the QSSTV window.
@@ -407,8 +424,7 @@ You will either see a pop-up with "Connection OK" or an error message showing th
 \image html config10.png
 <br><br>
 - Enable Reception in Hybrid Mode: allows reception of hamDRM in hybrid mode. If this is not enabled, hybrid mode files will not be shown or stored.
-- Enable Special server: Activate only if you want to use a different server than the preprogrammed default one of VK4AES
-- FTP Port: default 21
+- FTP Port: default 21 (cannot be modified at this moment for compatibility with EasyPal)
 - Remote Hostname: hostname of your ftp server
 - Remote directory:the ftp server directory where the stored images are
 - FTP Login name: the login name on the server

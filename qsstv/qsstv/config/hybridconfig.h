@@ -4,7 +4,7 @@
 #include "baseconfig.h"
 
 extern bool enableHybridRx;
-extern bool enableSpecialServer;
+//extern bool enableSpecialServer;
 extern int hybridFtpPort;
 extern QString hybridFtpRemoteHost;
 extern QString hybridFtpRemoteDirectory;

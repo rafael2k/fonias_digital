@@ -51,6 +51,8 @@ public:
   eftpError startNotifyCheck(QString fn, int interval, int repeats, bool rm);
   QList <QUrlInfo> getListingResults();
   void clearListingResults();
+  void closeWhenDone(bool can=true) { canCloseWhenDone=can; }
+  void hideProgress(bool hide=true) { displayProgress=!hide; }
   
   bool isUnconnected();
   bool isLoggedIn();
@@ -63,7 +65,9 @@ public:
 
 signals:
   void notification(QString info);
-  
+  void listingComplete();
+  void commandsDone(bool error);
+
 private slots:
   void ftp_commandStarted(int);
   void ftp_commandFinished(int,bool);
@@ -74,6 +78,8 @@ private slots:
   void slotAbort();
   void slotProgress(qint64 total, qint64 bytes);
   void notifyTick();
+  void slotTimeout();
+  void slotDisconnect();
     
 private:
   void connectToHost();
@@ -90,19 +96,23 @@ private:
   QString directory;
   int port;
   bool ftpCommandSuccess;
-  QTimer tim;
-
+  QTimer timeoutTimer;
+  bool   timeoutExpired;
   QString name;
 
   QList <int> mremove_listids;
   QList <QUrlInfo> listingResults;
   QList <QString>  notifyList;
   QTimer notifyTimer;
+  QTimer disconnectTimer;
   QString notifyMask;
   int notifyTicks;
   int notifyRepeats;
   bool notifyRemove;
   int notifyId;
+  bool connectPending;
+  bool canCloseWhenDone;
+  bool displayProgress;
 };
 
 //extern ftpInterface *ftpIntf;

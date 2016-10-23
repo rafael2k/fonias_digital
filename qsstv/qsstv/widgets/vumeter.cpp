@@ -39,6 +39,7 @@ vuMeter::vuMeter(QWidget *parent) : QWidget(parent)
   min = 0;
   max = 100;
   val =9;
+  prevValue = 0;
   horizontal=false;
   divisions=20;
   labelText="V";

@@ -4,7 +4,7 @@
 #include "baseconfig.h"
 
 extern bool enableHybridNotify;
-extern bool enableHybridNotifySpecialServer;
+extern bool enableHybridNotifySnoop;
 extern int hybridNotifyPort;
 extern QString hybridNotifyRemoteHost;
 extern QString hybridNotifyRemoteDir;

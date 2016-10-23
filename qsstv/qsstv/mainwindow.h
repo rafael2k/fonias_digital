@@ -29,6 +29,7 @@ public:
 
 private slots:
   void slotConfigure();
+  void slotSaveWaterfallImage();
   void slotExit();
   void slotResetLog();
   void slotLogSettings();
@@ -76,7 +77,6 @@ private:
   QLabel *freqDisplay;
   void timerEvent(QTimerEvent *);
   QStringList modModeList;
-//  void mouseDoubleClickEvent(QMouseEvent *e);
 };
 
 #endif // MAINWINDOW_H

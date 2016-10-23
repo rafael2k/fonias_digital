@@ -62,7 +62,7 @@ public:
   QString initError;
 
 private:
-  hamlib_port_t myport;
+
   RIG *my_rig;            // handle to rig (nstance)
   freq_t freq;            // frequency
   rmode_t rmode;          // radio mode of operation

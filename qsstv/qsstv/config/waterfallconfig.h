@@ -7,6 +7,8 @@ extern QString startPicWF;
 extern QString endPicWF;
 extern QString fixWF;
 extern QString bsrWF;
+extern QString startBinWF;
+extern QString endBinWF;
 extern QString wfFont;
 extern int wfFontSize;
 extern bool wfBold;

@@ -62,6 +62,26 @@ $(document).ready(function(){initNavTree('changelog.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><ul>
+<li>20161022 QSSTV 9.2.4<ul>
+<li>some minor bugfixing</li>
+<li>eliminated online status setting in Config Notication tab (doubled with setting in Operator settings)</li>
+<li>bug fix: incremental counter on filename wih hybrid mode</li>
+<li>added filename to statusbar when sending DRM image</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>20161021 QSSTV 9.2.3<ul>
+<li>bug fix: memory leak in tx DRM when loading/resizing images</li>
+<li>faster compression of tx images</li>
+<li>bug-fix: hybrid mode saved images with wrong file extension. Receivers tried downloading wrong file.</li>
+<li>Added all the patches (more then 20) from Mike, VK6M: rx/tx notifications and a large number of patches for image handling</li>
+<li>Added new features (such a save waterfall image) implmented by Mike, VK6M</li>
+<li>Todo: update the documentation !</li>
+</ul>
+</li>
+</ul>
+<ul>
 <li>20160929 QSSTV 9.2.2<ul>
 <li>added CTRL_F keyboard shortcut to switch to and from full screen. This is mainly used on low resolution screens where the top and/or bottom taskbars are masking part of the QSSTV window.</li>
 </ul>
@@ -194,7 +214,7 @@ $(document).ready(function(){initNavTree('changelog.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="index.html">QSSTV 9.2</a></li>
-    <li class="footer">Generated on Mon Oct 10 2016 16:22:04 for QSSTV by
+    <li class="footer">Generated on Sat Oct 22 2016 16:05:51 for QSSTV by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.11 </li>
   </ul>
