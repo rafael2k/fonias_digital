@@ -166,14 +166,14 @@
     <item>
      <widget class="spectrumWidget" name="spectrumFrame">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>180</width>
+        <width>100</width>
         <height>0</height>
        </size>
       </property>
