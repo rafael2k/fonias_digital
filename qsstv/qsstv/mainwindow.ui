@@ -29,6 +29,9 @@
     <property name="spacing">
      <number>0</number>
     </property>
+    <property name="sizeConstraint">
+     <enum>QLayout::SetNoConstraint</enum>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -43,6 +46,9 @@
     </property>
     <item>
      <widget class="QTabWidget" name="maintabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="font">
        <font>
         <weight>50</weight>
