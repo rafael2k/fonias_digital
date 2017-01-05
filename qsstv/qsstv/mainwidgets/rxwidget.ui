@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1125</width>
-    <height>569</height>
+    <width>1004</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,12 +34,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <property name="spacing">
     <number>1</number>
-   </property>
-   <property name="sizeConstraint">
-    <enum>QLayout::SetNoConstraint</enum>
    </property>
    <property name="leftMargin">
     <number>1</number>
@@ -58,19 +55,10 @@
      <property name="spacing">
       <number>1</number>
      </property>
-     <property name="sizeConstraint">
-      <enum>QLayout::SetNoConstraint</enum>
-     </property>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetNoConstraint</enum>
-       </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
-         </property>
          <item>
           <widget class="QToolButton" name="startToolButton">
            <property name="toolTip">
@@ -185,7 +173,7 @@
            <height>16777215</height>
           </size>
          </property>
-        </widget>
+         </widget>
        </item>
       </layout>
      </item>
@@ -252,7 +240,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="sstvTab">
         <attribute name="title">
@@ -261,9 +249,6 @@
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
           <number>1</number>
-         </property>
-         <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
          </property>
          <property name="leftMargin">
           <number>0</number>
@@ -279,9 +264,6 @@
          </property>
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetNoConstraint</enum>
-           </property>
            <property name="spacing">
             <number>1</number>
            </property>
@@ -466,7 +448,7 @@
         <attribute name="title">
          <string>DRM</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,0,1,0,0">
+        <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,0,1,0,0,0">
          <property name="spacing">
           <number>1</number>
          </property>
@@ -918,7 +900,75 @@
           </spacer>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="whoPushButton">
+             <property name="text">
+              <string>Who is on?</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="rxNotificationList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="contextMenuPolicy">
+            <enum>Qt::NoContextMenu</enum>
+           </property>
+           <property name="acceptDrops">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>Rx Notifications seen for the last DRM Hybrid Item.
+You usually only get a partial list due to timing, internet speeds, and the sender having read and deleted them already.</string>
+           </property>
+           <property name="lineWrapMode">
+            <enum>QPlainTextEdit::NoWrap</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="tabStopWidth">
+            <number>8</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

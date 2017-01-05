@@ -40,10 +40,10 @@ public:
   }
   void setDRMNotifyText(QString txt) {
     //ui->rxNotificationList->clear();
-    ui->rxNotificationList->setPlainText(txt);
+    //ui->rxNotificationList->setPlainText(txt);
   }
   void appendDRMNotifyText(QString txt) {
-    ui->rxNotificationList->appendPlainText(txt);
+    // ui->rxNotificationList->appendPlainText(txt);
   }
   //  drmPSDFrame *psdWdg() {return ui->drmPSDWidget;}
   drmStatusFrame *statusWdg() {return ui->drmStatusWidget;}

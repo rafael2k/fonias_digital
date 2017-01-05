@@ -88,7 +88,7 @@ void rxWidget::init()
     }
   if(slowCPU || lowRes)
     {
-      ui->rxNotificationList->hide();
+//      ui->rxNotificationList->hide();
       ui->whoPushButton->hide();
 //      ui->whoSpacer->hide();
     }

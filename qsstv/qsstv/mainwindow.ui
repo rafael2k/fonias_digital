@@ -25,7 +25,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -47,7 +47,7 @@
     <item>
      <widget class="QTabWidget" name="maintabWidget">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="font">
        <font>
@@ -66,9 +66,6 @@
        <bool>false</bool>
       </property>
       <widget class="QWidget" name="rxTab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -84,7 +81,7 @@
        <attribute name="title">
         <string>Receive</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -104,22 +101,15 @@
          <number>1</number>
         </property>
         <item>
-         <widget class="rxWidget" name="rxWindow" native="true">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
+         <widget class="rxWidget" name="rxWindow" native="true"/>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="txTab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <attribute name="title">
         <string>Transmit</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -144,13 +134,10 @@
        </layout>
       </widget>
       <widget class="QWidget" name="galleryTab">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <attribute name="title">
         <string>Gallery</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0">
+       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -178,9 +165,6 @@
     </item>
     <item>
      <widget class="spectrumWidget" name="spectrumFrame">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
         <horstretch>0</horstretch>
