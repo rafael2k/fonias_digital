@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>470</height>
+    <width>732</width>
+    <height>448</height>
    </rect>
   </property>
   <property name="font">
@@ -43,6 +43,12 @@
     </property>
     <item>
      <widget class="QTabWidget" name="maintabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="font">
        <font>
         <weight>50</weight>
@@ -174,7 +180,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>799</width>
+     <width>732</width>
      <height>18</height>
     </rect>
    </property>
