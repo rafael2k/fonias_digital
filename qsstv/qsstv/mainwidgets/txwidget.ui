@@ -80,6 +80,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="repeaterToneToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Send repeater tone</string>
          </property>
@@ -114,6 +117,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="editToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Edit image</string>
          </property>
@@ -131,6 +137,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="snapshotToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Camera snapshot</string>
          </property>
@@ -169,6 +178,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="hybridCheckBox">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Hybrid</string>
          </property>
@@ -176,6 +188,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="uploadToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Upload Now</string>
          </property>
@@ -206,6 +221,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="generateToneToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Send tone</string>
          </property>
@@ -223,6 +241,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="sweepToneToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Send sweep tones</string>
          </property>
@@ -1255,6 +1276,9 @@
        </property>
        <item row="1" column="1">
         <widget class="QComboBox" name="templatesComboBox">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Select template</string>
          </property>
@@ -1265,6 +1289,9 @@
        </item>
        <item row="0" column="1">
         <widget class="QCheckBox" name="cwCheckBox">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Send CW at end</string>
          </property>
@@ -1278,6 +1305,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QCheckBox" name="templateCheckBox">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Use Template</string>
          </property>
@@ -1285,6 +1315,9 @@
        </item>
        <item row="0" column="0">
         <widget class="QCheckBox" name="voxCheckBox">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Send leading tone</string>
          </property>
@@ -1308,6 +1341,9 @@
        </property>
        <item row="0" column="0">
         <widget class="QLabel" name="toCallLabel">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -1324,6 +1360,9 @@
        </item>
        <item row="0" column="1">
         <widget class="QLineEdit" name="toCallLineEdit">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>120</width>
@@ -1346,6 +1385,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="operatorLabel">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -1362,6 +1404,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="operatorLineEdit">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>120</width>
@@ -1384,6 +1429,9 @@
        </item>
        <item row="1" column="2">
         <widget class="QLabel" name="rsvLabel">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -1400,6 +1448,9 @@
        </item>
        <item row="1" column="3">
         <widget class="QLineEdit" name="rsvLineEdit">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>50</width>
@@ -1429,6 +1480,9 @@
        </property>
        <item>
         <widget class="QLabel" name="rstLabel_4">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>10</width>
@@ -1445,6 +1499,9 @@
        </item>
        <item>
         <widget class="xyzPlainTextEdit" name="xPlainTextEdit">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
            <horstretch>0</horstretch>
@@ -1474,6 +1531,9 @@
        </property>
        <item>
         <widget class="QLabel" name="rstLabel_5">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>10</width>
@@ -1490,6 +1550,9 @@
        </item>
        <item>
         <widget class="xyzPlainTextEdit" name="yPlainTextEdit">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
            <horstretch>0</horstretch>
@@ -1519,6 +1582,9 @@
        </property>
        <item>
         <widget class="QLabel" name="rstLabel_6">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>10</width>
@@ -1535,6 +1601,9 @@
        </item>
        <item>
         <widget class="xyzPlainTextEdit" name="zPlainTextEdit">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
            <horstretch>0</horstretch>
