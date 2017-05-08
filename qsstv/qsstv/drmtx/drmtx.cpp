@@ -35,7 +35,7 @@ void drmTx::init()
 void drmTx::start()
 {
   statusBarMsgEvent *statBar;
-  statBar=new statusBarMsgEvent("Sending "+drmTxFileName.fileName());
+  statBar=new statusBarMsgEvent("Enviando "+drmTxFileName.fileName());
   QApplication::postEvent(dispatcherPtr,statBar);
   txDRM->start(true);
 

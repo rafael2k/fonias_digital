@@ -419,13 +419,13 @@ void dispatcher::startDRMTxBinary()
 
   mbox.setWindowTitle("TX Binary File");
   mbox.setText(QString("'%1'").arg(filename));
-  mbox.setInformativeText(QString("The file is %1Kb and will take %2 seconds on air to send").
+  mbox.setInformativeText(QString("Tamanho do arquivo: %1Kb\nTempo estimado de envio: %2 seg.").
                           arg(finfo.size()/1000.0,0,'f',0).arg(txtime));
 
   if (useHybrid)
     sendButton = mbox.addButton(tr("Upload ready to transmit"), QMessageBox::AcceptRole);
   else
-    sendButton = mbox.addButton(tr("Start Transmitting"), QMessageBox::AcceptRole);
+    sendButton = mbox.addButton(tr("Iniciar envio"), QMessageBox::AcceptRole);
   mbox.setStandardButtons(QMessageBox::Cancel);
 
   mbox.exec();
