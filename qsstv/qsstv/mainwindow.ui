@@ -79,7 +79,7 @@
         </font>
        </property>
        <attribute name="title">
-        <string>Receive</string>
+        <string>Recepção</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1">
         <property name="spacing">
@@ -107,7 +107,7 @@
       </widget>
       <widget class="QWidget" name="txTab">
        <attribute name="title">
-        <string>Transmit</string>
+        <string>Transmissão</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1">
         <property name="spacing">
@@ -135,7 +135,7 @@
       </widget>
       <widget class="QWidget" name="galleryTab">
        <attribute name="title">
-        <string>Gallery</string>
+        <string>Galeria</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
         <property name="spacing">
@@ -210,31 +210,22 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Arquivo</string>
     </property>
-    <addaction name="actionSaveWaterfallImage"/>
-    <addaction name="separator"/>
     <addaction name="actionExit"/>
-    <addaction name="actionTxTestPattern"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
-     <string>Options</string>
+     <string>Opções</string>
     </property>
     <addaction name="actionConfigure"/>
-    <addaction name="actionCalibrate"/>
-    <addaction name="separator"/>
-    <addaction name="actionLogSettings"/>
-    <addaction name="actionResetLog"/>
-    <addaction name="actionDumpSamplesPerLine"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>Ajuda</string>
     </property>
     <addaction name="actionAboutQSSTV"/>
     <addaction name="actionAboutQt"/>
-    <addaction name="actionUsersGuide"/>
    </widget>
    <widget class="QMenu" name="menuScope">
     <property name="title">
@@ -267,12 +258,12 @@
   </widget>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>Sair</string>
    </property>
   </action>
   <action name="actionConfigure">
    <property name="text">
-    <string>Configuration</string>
+    <string>Configuração</string>
    </property>
   </action>
   <action name="actionDumpSamplesPerLine">
@@ -282,7 +273,7 @@
   </action>
   <action name="actionCalibrate">
    <property name="text">
-    <string>Calibrate</string>
+    <string>Calibrar</string>
    </property>
   </action>
   <action name="actionShowDataScope">
@@ -302,12 +293,12 @@
   </action>
   <action name="actionAboutQSSTV">
    <property name="text">
-    <string>About QSSTV</string>
+    <string>Sobre o QSSTV</string>
    </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
-    <string>About Qt</string>
+    <string>Sobre a Qt</string>
    </property>
   </action>
   <action name="actionUsersGuide">
