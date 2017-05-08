@@ -57,11 +57,15 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
 {
   QApplication::instance()->thread()->setObjectName("qsstv_main");
   wfTextPushButton=new QPushButton("WF Text",this);
-  bsrPushButton=new QPushButton("BSR",this);
+  wfTextPushButton->setVisible(false);
+  bsrPushButton=new QPushButton("Pedir para Retransmitir (BSR)",this);
 
   freqComboBox=new QComboBox(this);
+  freqComboBox->setVisible(false);
   idPushButton=new QPushButton("WF ID",this);
+  idPushButton->setVisible(false);
   cwPushButton=new QPushButton("CW ID",this);
+  cwPushButton->setVisible(false);
   QFont f;
 
   freqDisplay = new QLabel(this);
@@ -74,6 +78,9 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
   freqDisplay->setFrameShape(QFrame::Box);
   freqDisplay->setFrameShadow(QFrame::Raised);
   freqDisplay->setLineWidth(2);
+
+  freqDisplay->setVisible(false);
+
   pttText.setText("   PTT");
   pttIcon=new QLabel(this);
   pttIcon->setFixedSize(16,16);
@@ -336,7 +343,7 @@ void mainWindow::slotSaveWaterfallImage()
 void mainWindow::slotExit()
 {
   int exit;
-  exit=QMessageBox::information(this, tr("Quit..."),tr("Do you really want to quit QSSTV?"), QMessageBox::Ok, QMessageBox::Cancel);
+  exit=QMessageBox::information(this, tr("Sair..."),tr("Realmente sair do QSSTV?"), QMessageBox::Ok, QMessageBox::Cancel);
   if(exit==QMessageBox::Ok)
     {
       statusBarPtr->showMessage("Cleaning up...");
@@ -390,7 +397,7 @@ void mainWindow::slotDocumentation()
 void mainWindow::slotAboutQSSTV()
 {
   QString temp=tr("QSSTV\nVersion: ") + MAJORVERSION + MINORVERSION;
-  temp += "\n http://users.telenet.be/on4qz \n(c) 2000-2016 -- Johan Maes - ON4QZ\n HAMDRM Software based on RX/TXAMADRM\n from PA0MBO";
+  temp += "\n http://users.telenet.be/on4qz \n(c) 2000-2016 -- Johan Maes - ON4QZ\n2017 -- Rafael Diniz / SDR Telecom\n HAMDRM Software based on RX/TXAMADRM\n from PA0MBO";
   QMessageBox::about(this,tr("About..."),temp);
 
 }

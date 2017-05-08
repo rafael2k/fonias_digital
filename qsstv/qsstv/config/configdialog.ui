@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Configuration</string>
+   <string>Configuração</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -36,7 +36,7 @@
      </property>
      <widget class="QWidget" name="operatorTab">
       <attribute name="title">
-       <string>Operator</string>
+       <string>Operador</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="spacing">
@@ -59,9 +59,59 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="profilesTab">
+      <attribute name="title">
+       <string>Perfis DRM</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_12">
+       <property name="spacing">
+        <number>1</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="drmProfileConfig" name="drmProfilesWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="soundTab">
+      <attribute name="title">
+       <string>Som</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>1</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="soundConfig" name="soundWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="directoryTab">
       <attribute name="title">
-       <string>Directories</string>
+       <string>Diretórios</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
@@ -86,7 +136,7 @@
      </widget>
      <widget class="QWidget" name="guiTab">
       <attribute name="title">
-       <string>Gui</string>
+       <string>Interface</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="spacing">
@@ -106,31 +156,6 @@
        </property>
        <item>
         <widget class="guiConfig" name="guiWidget" native="true"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="soundTab">
-      <attribute name="title">
-       <string>Sound</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>1</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="soundConfig" name="soundWidget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -186,7 +211,7 @@
      </widget>
      <widget class="QWidget" name="repeaterTab">
       <attribute name="title">
-       <string>Repeater</string>
+       <string>Repetidor</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <property name="spacing">
@@ -261,7 +286,7 @@
      </widget>
      <widget class="QWidget" name="hybridTab">
       <attribute name="title">
-       <string>Hybrid</string>
+       <string>Híbrido</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_11">
        <property name="spacing">
@@ -286,7 +311,7 @@
      </widget>
      <widget class="QWidget" name="notifyTab">
       <attribute name="title">
-       <string>Notifications</string>
+       <string>Notificações</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_11a">
        <property name="spacing">
@@ -309,34 +334,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="profilesTab">
-      <attribute name="title">
-       <string>DRM Profiles</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_12">
-       <property name="spacing">
-        <number>1</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="drmProfileConfig" name="drmProfilesWidget" native="true"/>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="frequenciesTab">
       <attribute name="title">
-       <string>Frequencies</string>
+       <string>Frequências</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
        <property name="spacing">
