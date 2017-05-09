@@ -946,7 +946,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Mode</string>
+            <string>Modo</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1046,7 +1046,7 @@
             </size>
            </property>
            <property name="text">
-            <string>BW</string>
+            <string>Banda</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1091,7 +1091,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Interl.</string>
+            <string>Entrel.</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1162,6 +1162,12 @@
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="drmProfileLabel">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>50</height>
+            </size>
+           </property>
            <property name="text">
             <string>Perfil</string>
            </property>
@@ -1172,10 +1178,16 @@
          </item>
          <item row="2" column="1" colspan="3">
           <widget class="QComboBox" name="drmProfileComboBox">
+           <property name="minimumSize">
+            <size>
+             <width>65</width>
+             <height>75</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>25</height>
+             <height>100</height>
             </size>
            </property>
           </widget>
