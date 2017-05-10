@@ -176,6 +176,7 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
 #endif
 
   ui->maintabWidget->setTabEnabled(2, false);
+  ui->maintabWidget->setStyleSheet("QTabBar::tab { height: 60px; width: 200px; }");
 }
 
 /**
