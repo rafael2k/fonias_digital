@@ -272,7 +272,7 @@
 
        <widget class="QWidget" name="sstvTab">
         <attribute name="title">
-         <string>SSTV</string>
+         <string></string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">

@@ -135,7 +135,7 @@
       </widget>
       <widget class="QWidget" name="galleryTab">
        <attribute name="title">
-        <string>Galeria</string>
+        <string></string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
         <property name="spacing">

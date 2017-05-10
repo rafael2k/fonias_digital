@@ -45,6 +45,7 @@ rxWidget::rxWidget(QWidget *parent):QWidget(parent),ui(new Ui::rxWidget)
   connect(ui->whoPushButton,SIGNAL(clicked()),SLOT(slotWho()));
   notifyRXIntf = new ftpInterface("RX Notification FTP");
 
+  ui->settingsTableWidget->setTabEnabled(0, false);
 }
 
 rxWidget::~rxWidget()

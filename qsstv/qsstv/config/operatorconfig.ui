@@ -46,7 +46,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Firstname</string>
+        <string>Primeiro Nome</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -95,7 +95,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Lastname</string>
+        <string>Último Nome</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -144,7 +144,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Callsign</string>
+        <string>Indicativo</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -193,7 +193,7 @@
         </size>
        </property>
        <property name="text">
-        <string>QTH</string>
+        <string>Localização</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -242,7 +242,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Locator</string>
+        <string>Localizador</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -276,6 +276,9 @@
    </item>
    <item>
     <widget class="QCheckBox" name="onlineStatusCheckbox">
+     <property name="visible">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Allow other users to see your online status via the notification server</string>
      </property>
@@ -285,6 +288,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="onlineStatusLabel">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Online Status Text</string>
        </property>
@@ -292,6 +298,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="onlineStatusText">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
        <property name="maxLength">
         <number>120</number>
        </property>

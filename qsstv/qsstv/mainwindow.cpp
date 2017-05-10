@@ -174,6 +174,8 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
   ui->menuScope->menuAction()->setVisible(false);
 
 #endif
+
+  ui->maintabWidget->setTabEnabled(2, false);
 }
 
 /**

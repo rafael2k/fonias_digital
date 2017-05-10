@@ -845,7 +845,7 @@
        </property>
        <widget class="QWidget" name="sstvTXTab">
         <attribute name="title">
-         <string>SSTV</string>
+         <string></string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>

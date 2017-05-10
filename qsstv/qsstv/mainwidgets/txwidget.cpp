@@ -98,6 +98,7 @@ txWidget::txWidget(QWidget *parent) :  QWidget(parent), ui(new Ui::txWidget)
   notifyTXIntf   = new ftpInterface("HybridTXNotify");
   onlineStatusIntf = new ftpInterface("HybridOnlineStatus");
 
+  ui->settingsTableWidget->setTabEnabled(0, false);
 }
 
 txWidget::~txWidget()
