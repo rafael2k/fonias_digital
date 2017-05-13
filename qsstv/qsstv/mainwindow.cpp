@@ -58,7 +58,7 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent),  ui(new Ui::MainW
   QApplication::instance()->thread()->setObjectName("qsstv_main");
   wfTextPushButton=new QPushButton("WF Text",this);
   wfTextPushButton->setVisible(false);
-  bsrPushButton=new QPushButton("Pedir para Retransmitir (BSR)",this);
+  bsrPushButton=new QPushButton("Pedir para Enviar de Novo",this);
 
   freqComboBox=new QComboBox(this);
   freqComboBox->setVisible(false);

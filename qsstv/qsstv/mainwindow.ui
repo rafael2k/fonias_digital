@@ -12,7 +12,7 @@
   </property>
   <property name="font">
    <font>
-    <pointsize>8</pointsize>
+    <pointsize>20</pointsize>
     <weight>50</weight>
     <italic>false</italic>
     <bold>false</bold>
@@ -79,7 +79,7 @@
         </font>
        </property>
        <attribute name="title">
-        <string>Recepção</string>
+        <string>Receber</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1">
         <property name="spacing">
@@ -107,7 +107,7 @@
       </widget>
       <widget class="QWidget" name="txTab">
        <attribute name="title">
-        <string>Transmissão</string>
+        <string>Enviar</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1">
         <property name="spacing">
