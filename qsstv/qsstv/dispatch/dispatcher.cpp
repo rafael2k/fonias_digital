@@ -408,6 +408,30 @@ void dispatcher::startDRMTxBinary()
 
   dirDialog d((QWidget *)mainWindowPtr,"Binary File");
   QString filename=d.openFileName("","*");
+
+  // lets compress the image files
+  if (filename.endsWith(".jpg") || filename.endsWith(".JPG") || filename.endsWith(".jpeg") || filename.endsWith(".JPEG") ||
+      filename.endsWith(".png") || filename.endsWith(".PNG")){
+      QString cmd = "ffmpeg -y -i \"";
+      cmd.append(filename);
+      cmd.append("\" -vf scale=-1:480 ");
+
+      int lastPoint = filename.lastIndexOf(".");
+      QString filenameNoExt = filename.left(lastPoint);
+
+      cmd.append("\"");
+      cmd.append(filenameNoExt);
+      cmd.append("-cp.jpg\"");
+
+      // qDebug("cmd: " + cmd.toLatin1());
+
+      QByteArray cmd2 = cmd.toUtf8();
+      // printf("cmd2: %s\n", cmd2.constData());
+      system(cmd2.constData());
+      filenameNoExt.append("-cp.jpg");
+      filename = filenameNoExt;
+  }
+
   if(filename.isEmpty()) return;
   if(!txWidgetPtr->functionsPtr()->prepareBinary(filename)) return;
 
