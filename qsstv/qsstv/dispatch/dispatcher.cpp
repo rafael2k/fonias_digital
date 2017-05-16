@@ -471,7 +471,6 @@ void dispatcher::startDRMTxBinary()
   }
 #endif
 
-
   if(filename.isEmpty()) return;
   if(!txWidgetPtr->functionsPtr()->prepareBinary(filename)) return;
 
