@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Send BSR (latest on top)</string>
+      <string>Pedir para Enviar de Novo (mais recente no topo)</string>
      </property>
     </widget>
    </item>
@@ -45,7 +45,7 @@
      <item>
       <widget class="QPushButton" name="cancelPushButton">
        <property name="text">
-        <string>Cancel</string>
+        <string>Cancelar</string>
        </property>
       </widget>
      </item>
@@ -59,7 +59,7 @@
      <item>
       <widget class="QPushButton" name="compatiblePushButton">
        <property name="text">
-        <string>Compatible</string>
+        <string>Enviar Pedido</string>
        </property>
       </widget>
      </item>

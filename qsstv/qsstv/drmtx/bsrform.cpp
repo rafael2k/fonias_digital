@@ -27,7 +27,7 @@ void bsrForm::init()
   if(bsrPtr->count()==0)
     {
       ui->infoTextEdit->clear();
-      ui->infoTextEdit->appendPlainText("No BSR available");
+      ui->infoTextEdit->appendPlainText("Nenhum Pedido para Enviar de Novo");
       return;
     }
   for(i=bsrPtr->count()-1;i>=0;i--) //latest first

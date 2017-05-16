@@ -402,7 +402,8 @@ void dispatcher::startDRMTxBinary()
 {
   //TODO: this whole thing should probably live in txWidget::slotBinary
   QFileInfo finfo;
-  int txtime=0;
+  int txtime_s = 0;
+  int txtime_m = 0;
   QMessageBox mbox(mainWindowPtr);
   QPushButton *sendButton;
 
@@ -410,46 +411,98 @@ void dispatcher::startDRMTxBinary()
   QString filename=d.openFileName("","*");
 
   // lets compress the image files
-  if (filename.endsWith(".jpg") || filename.endsWith(".JPG") || filename.endsWith(".jpeg") || filename.endsWith(".JPEG") ||
+  // Sugestoes: 1100px lado maior fica ok! -- 1080 do lado maior....
+  // h.265 fica bem bom hein - ffmpeg ftw
+  // TODO: check if the output file is smaller than original one
+  // ffmpeg -i foto.jpg -vf scale=-1:1080  -b 500k -minrate 500k -maxrate 500k -bufsize 1000k
+  // idea: iterate till we get a pic below some size...
+#if 1
+  if (filename.endsWith(".jpg") || filename.endsWith(".Jpg") || filename.endsWith(".JPG") || 
+      filename.endsWith(".jpeg") || filename.endsWith(".JPEG") ||  filename.endsWith(".Jpeg") ||
       filename.endsWith(".png") || filename.endsWith(".PNG")){
-      QString cmd = "ffmpeg -y -i \"";
-      cmd.append(filename);
-      cmd.append("\" -vf scale=-1:480 ");
 
       int lastPoint = filename.lastIndexOf(".");
-      QString filenameNoExt = filename.left(lastPoint);
 
-      cmd.append("\"");
-      cmd.append(filenameNoExt);
-      cmd.append("-cp.jpg\"");
+      QString filenameH = filename.left(lastPoint);
+      filenameH.append("-H.jpg");
 
-      // qDebug("cmd: " + cmd.toLatin1());
+      QString filenameW = filename.left(lastPoint);
+      filenameW.append("-W.jpg");
 
-      QByteArray cmd2 = cmd.toUtf8();
-      // printf("cmd2: %s\n", cmd2.constData());
-      system(cmd2.constData());
-      filenameNoExt.append("-cp.jpg");
-      filename = filenameNoExt;
+      QString cmdH = "ffmpeg -y -i \"";
+      cmdH.append(filename);
+      cmdH.append("\" -vf scale=-1:480 -qmin 15 ");
+      cmdH.append("\"");
+      cmdH.append(filenameH);
+      cmdH.append("\"");
+
+      QString cmdW = "ffmpeg -y -i \"";
+      cmdW.append(filename);
+      cmdW.append("\" -vf scale=480:-1 -qmin 15 ");
+      cmdW.append("\"");
+      cmdW.append(filenameW);
+      cmdW.append("\"");
+
+      QByteArray qcmdH = cmdH.toUtf8();
+      qDebug("cmdH: %s\n", qcmdH.constData());
+      system(qcmdH.constData());
+
+      QByteArray qcmdW = cmdW.toUtf8();
+      qDebug("cmdW: %s\n", qcmdW.constData());
+      system(qcmdW.constData());
+
+      finfo.setFile(filename);
+      int sizeO = finfo.size();
+
+      finfo.setFile(filenameH);
+      int sizeH = finfo.size();
+
+      finfo.setFile(filenameW);
+      int sizeW = finfo.size();
+
+      if (sizeW < sizeO && sizeW < sizeH)
+          filename = filenameW;
+
+      if (sizeH < sizeO && sizeH < sizeW)
+          filename = filenameH;
+
+      qDebug("sizeO: %d sizeW: %d sizeH: %d\n", sizeO, sizeH, sizeW);
+
   }
+#endif
+
 
   if(filename.isEmpty()) return;
   if(!txWidgetPtr->functionsPtr()->prepareBinary(filename)) return;
 
-  txtime = txWidgetPtr->functionsPtr()->calcTxTime(true,0);
+  txtime_s = txWidgetPtr->functionsPtr()->calcTxTime(true,0);
+
+  if (txtime_s >= 60){
+      txtime_m = txtime_s / 60;
+      txtime_s = txtime_s % 60;
+  }
+
   finfo.setFile(filename);
 
-  if (txtime > (3*60))
-    mbox.setIcon(QMessageBox::Warning);
+//  if (txtime > (3*60))
+//    mbox.setIcon(QMessageBox::Warning);
 
   mbox.setWindowTitle("TX Binary File");
   mbox.setText(QString("'%1'").arg(filename));
-  mbox.setInformativeText(QString("Tamanho do arquivo: %1Kb\nTempo estimado de envio: %2 seg.").
-                          arg(finfo.size()/1000.0,0,'f',0).arg(txtime));
+
+  if (txtime_m == 0){
+      mbox.setInformativeText(QString("Tamanho do arquivo: %1Kb\nTempo estimado de envio: %2 seg.").
+                              arg(finfo.size()/1000.0,0,'f',0).arg(txtime_s));
+  }
+  else {
+      mbox.setInformativeText(QString("Tamanho do arquivo: %1Kb\nTempo estimado de envio: %2 min %3 seg.").
+                              arg(finfo.size()/1000.0,0,'f',0).arg(txtime_m).arg(txtime_s));
+  }
 
   if (useHybrid)
     sendButton = mbox.addButton(tr("Upload ready to transmit"), QMessageBox::AcceptRole);
   else
-    sendButton = mbox.addButton(tr("Iniciar envio"), QMessageBox::AcceptRole);
+    sendButton = mbox.addButton(tr("Enviar"), QMessageBox::AcceptRole);
   mbox.setStandardButtons(QMessageBox::Cancel);
 
   mbox.exec();
