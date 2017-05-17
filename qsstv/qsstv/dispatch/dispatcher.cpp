@@ -576,6 +576,7 @@ void dispatcher::saveRxSSTVImage(QString shortModeName)
 
 void dispatcher::saveImage(QString fileName, QString infotext)
 {
+    // AQUI
   QFileInfo info(fileName);
   QString fn="/tmp/"+info.baseName()+"."+ftpDefaultImageFormat;
   galleryWidgetPtr->putRxImage(fileName);

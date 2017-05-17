@@ -65,14 +65,14 @@
      <item>
       <widget class="QPushButton" name="cancelPushButton">
        <property name="text">
-        <string>Cancel</string>
+        <string>Cancelar</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="fixPushButton">
        <property name="text">
-        <string>Fix</string>
+        <string>Enviar Correção</string>
        </property>
       </widget>
      </item>

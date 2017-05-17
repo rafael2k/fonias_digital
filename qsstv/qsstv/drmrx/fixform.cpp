@@ -34,11 +34,11 @@ void fixForm::setInfoExternal(int mode, QString fileName, int missing)
 
 void fixForm::common(int mode,QString fileName,int missing)
 {
-  ui->filenameLineEdit->setText("Filename: "+fileName+"\n");
+  ui->filenameLineEdit->setText("Nome do arquivo: "+fileName+"\n");
   if(callsignValid)
     {
-      ui->infoTextEdit->appendPlainText("From: "+ QString(drmCallsign));
+      ui->infoTextEdit->appendPlainText("De: "+ QString(drmCallsign));
      }
   ui->infoTextEdit->appendPlainText(modeToString(mode));
-  ui->infoTextEdit->appendPlainText(QString("Requested segments: %1").arg(missing));
+  ui->infoTextEdit->appendPlainText(QString("Segmentos requisitados: %1").arg(missing));
 }
