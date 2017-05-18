@@ -404,6 +404,7 @@ void dispatcher::startDRMTxBinary()
   QFileInfo finfo;
   int txtime_s = 0;
   int txtime_m = 0;
+  int size_pic = 0;
   QMessageBox mbox(mainWindowPtr);
   QPushButton *sendButton;
 
@@ -415,59 +416,92 @@ void dispatcher::startDRMTxBinary()
   // h.265 fica bem bom hein - ffmpeg ftw
   // TODO: check if the output file is smaller than original one
   // ffmpeg -i foto.jpg -vf scale=-1:1080  -b 500k -minrate 500k -maxrate 500k -bufsize 1000k
-  // idea: iterate till we get a pic below some size...
+  // idea: iterate till we get a picbelow some size...
+#define MAX_PIC_SIZE 100000 // 100k
+  int resolutions[3];
+  resolutions[0] = 1080;
+  resolutions[1] = 720;
+  resolutions[2] = 480;
+
 #if 1
   if (filename.endsWith(".jpg") || filename.endsWith(".Jpg") || filename.endsWith(".JPG") || 
       filename.endsWith(".jpeg") || filename.endsWith(".JPEG") ||  filename.endsWith(".Jpeg") ||
       filename.endsWith(".png") || filename.endsWith(".PNG")){
 
-      int lastPoint = filename.lastIndexOf(".");
-
-      QString filenameH = filename.left(lastPoint);
-      filenameH.append("-H.jpg");
-
-      QString filenameW = filename.left(lastPoint);
-      filenameW.append("-W.jpg");
-
-      QString cmdH = "ffmpeg -y -i \"";
-      cmdH.append(filename);
-      cmdH.append("\" -vf scale=-1:480 -qmin 15 ");
-      cmdH.append("\"");
-      cmdH.append(filenameH);
-      cmdH.append("\"");
-
-      QString cmdW = "ffmpeg -y -i \"";
-      cmdW.append(filename);
-      cmdW.append("\" -vf scale=480:-1 -qmin 15 ");
-      cmdW.append("\"");
-      cmdW.append(filenameW);
-      cmdW.append("\"");
-
-      QByteArray qcmdH = cmdH.toUtf8();
-      qDebug("cmdH: %s\n", qcmdH.constData());
-      system(qcmdH.constData());
-
-      QByteArray qcmdW = cmdW.toUtf8();
-      qDebug("cmdW: %s\n", qcmdW.constData());
-      system(qcmdW.constData());
 
       finfo.setFile(filename);
-      int sizeO = finfo.size();
+      size_pic = finfo.size();
+      int res_index = 0;
+      QString filename_elected = filename;
+      char cmd[2048];
+      while (size_pic > MAX_PIC_SIZE && res_index < 3) {
 
-      finfo.setFile(filenameH);
-      int sizeH = finfo.size();
+          int lastPoint = filename.lastIndexOf(".");
+          QString filenameH = filename.left(lastPoint);
+          filenameH.append("-H.jpg");
 
-      finfo.setFile(filenameW);
-      int sizeW = finfo.size();
+          QString filenameW = filename.left(lastPoint);
+          filenameW.append("-W.jpg");
 
-      if (sizeW < sizeO && sizeW < sizeH)
-          filename = filenameW;
+// C magic
+          QByteArray filename_BA = filename.toUtf8();
+          const char *filename_C = filename_BA.constData();
 
-      if (sizeH < sizeO && sizeH < sizeW)
-          filename = filenameH;
 
-      qDebug("sizeO: %d sizeW: %d sizeH: %d\n", sizeO, sizeH, sizeW);
+          QByteArray filenameH_BA = filenameH.toUtf8();
+          const char *filenameH_C = filenameH_BA.constData();
+          int i = 0;
+          int idx = i;
+          while ( filenameH_C[i] != 0 ){
+              if (filenameH_C[i] == '/')
+                  idx = i+1;
+              i++;
+          }
+          sprintf(cmd, "ffmpeg -y -i \"%s\" -vf scale=-1:%d \"/tmp/%s\"", filename_C, resolutions[res_index], filenameH_C + idx);
+          printf("cmd: %s\n", cmd);
+          system(cmd);
 
+          filenameH = "/tmp/";
+          filenameH.append(filenameH_C + idx);
+
+
+          QByteArray filenameW_BA = filenameW.toUtf8();
+          const char *filenameW_C = filenameW_BA.constData();
+          i = 0;
+          idx = i;
+          while ( filenameW_C[i] != 0 ){
+              if (filenameW_C[i] == '/')
+                  idx = i+1;
+              i++;
+          }
+          sprintf(cmd, "ffmpeg -y -i \"%s\" -vf scale=%d:-1 \"/tmp/%s\"", filename_C, resolutions[res_index], filenameW_C + idx);
+          printf("cmd: %s\n", cmd);
+          system(cmd);
+
+          filenameW = "/tmp/";
+          filenameW.append(filenameW_C + idx);
+
+
+          finfo.setFile(filenameH);
+          int sizeH = finfo.size();
+
+          finfo.setFile(filenameW);
+          int sizeW = finfo.size();
+
+          if (sizeW < size_pic && sizeW < sizeH){
+              size_pic = sizeW;
+              filename_elected = filenameW;
+          }
+
+          if (sizeH < size_pic && sizeH <= sizeW){
+              size_pic = sizeH;
+              filename_elected = filenameH;
+          }
+
+          res_index++;
+      }
+      qDebug("Elected pic with size: %d\n", size_pic);
+      filename = filename_elected;
   }
 #endif
 
