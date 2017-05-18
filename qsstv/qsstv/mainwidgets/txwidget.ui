@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>990</width>
-    <height>835</height>
+    <height>778</height>
    </rect>
   </property>
   <property name="font">
@@ -31,30 +31,17 @@
       <number>1</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
+      <widget class="imageViewer" name="imageFrame" native="true">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
        <property name="spacing">
         <number>2</number>
        </property>
-       <item>
-        <widget class="QToolButton" name="startToolButton">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Start transmit</string>
-         </property>
-         <property name="statusTip">
-          <string>Start transmit</string>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QPushButton" name="binaryPushButton">
          <property name="sizePolicy">
@@ -63,12 +50,19 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="font">
           <font>
-           <pointsize>20</pointsize>
+           <pointsize>28</pointsize>
            <weight>75</weight>
            <italic>true</italic>
            <bold>true</bold>
+           <underline>true</underline>
           </font>
          </property>
          <property name="toolTip">
@@ -78,11 +72,63 @@
           <string>Iniciar Transmissão</string>
          </property>
          <property name="text">
-          <string>Enviar</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/binary.png</normaloff>:/icons/binary.png</iconset>
+           <normaloff>:/icons/Enviar.png</normaloff>:/icons/Enviar.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>192</width>
+           <height>100</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="stopToolButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Parar Transmissão</string>
+         </property>
+         <property name="statusTip">
+          <string>Parar Transmissão</string>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/Parar.png</normaloff>:/icons/Parar.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>128</width>
+           <height>64</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -103,143 +149,22 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="stopToolButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-           <weight>75</weight>
-           <italic>true</italic>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="toolTip">
-          <string>Parar Transmissão</string>
-         </property>
-         <property name="statusTip">
-          <string>Parar Transmissão</string>
-         </property>
-         <property name="text">
-          <string>Parar</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="repeaterToneToolButton">
+        <widget class="QToolButton" name="sweepToneToolButton">
          <property name="visible">
           <bool>false</bool>
          </property>
          <property name="toolTip">
-          <string>Send repeater tone</string>
+          <string>Send sweep tones</string>
          </property>
          <property name="statusTip">
-          <string>Send repeater tone</string>
+          <string>Send sweep tones</string>
          </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
           <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/tone.png</normaloff>:/icons/tone.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="openToolButton">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Load image</string>
-         </property>
-         <property name="statusTip">
-          <string>Load image</string>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/fileopen.png</normaloff>:/icons/fileopen.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="editToolButton">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Edit image</string>
-         </property>
-         <property name="statusTip">
-          <string>Edit image</string>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/edit.png</normaloff>:/icons/edit.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="snapshotToolButton">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Camera snapshot</string>
-         </property>
-         <property name="statusTip">
-          <string>Camera snapshot</string>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/camera.png</normaloff>:/icons/camera.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="hybridCheckBox">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Hybrid</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="uploadToolButton">
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Upload Now</string>
-         </property>
-         <property name="statusTip">
-          <string>Upload Now</string>
-         </property>
-         <property name="text">
-          <string>Upload</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/up.png</normaloff>:/icons/up.png</iconset>
+           <normaloff>:/icons/sweep.png</normaloff>:/icons/sweep.png</iconset>
          </property>
         </widget>
        </item>
@@ -264,45 +189,145 @@
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="sweepToneToolButton">
+        <widget class="QToolButton" name="uploadToolButton">
          <property name="visible">
           <bool>false</bool>
          </property>
          <property name="toolTip">
-          <string>Send sweep tones</string>
+          <string>Upload Now</string>
          </property>
          <property name="statusTip">
-          <string>Send sweep tones</string>
+          <string>Upload Now</string>
+         </property>
+         <property name="text">
+          <string>Upload</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/up.png</normaloff>:/icons/up.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="snapshotToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Camera snapshot</string>
+         </property>
+         <property name="statusTip">
+          <string>Camera snapshot</string>
          </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
           <iconset resource="../qsstv.qrc">
-           <normaloff>:/icons/sweep.png</normaloff>:/icons/sweep.png</iconset>
+           <normaloff>:/icons/camera.png</normaloff>:/icons/camera.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="editToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Edit image</string>
+         </property>
+         <property name="statusTip">
+          <string>Edit image</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/edit.png</normaloff>:/icons/edit.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="openToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Load image</string>
+         </property>
+         <property name="statusTip">
+          <string>Load image</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/fileopen.png</normaloff>:/icons/fileopen.png</iconset>
+         </property>
+         <property name="invisible" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="repeaterToneToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Send repeater tone</string>
+         </property>
+         <property name="statusTip">
+          <string>Send repeater tone</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/tone.png</normaloff>:/icons/tone.png</iconset>
+         </property>
+         <property name="invisible" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="startToolButton">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Start transmit</string>
+         </property>
+         <property name="statusTip">
+          <string>Start transmit</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../qsstv.qrc">
+           <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="hybridCheckBox">
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Hybrid</string>
+         </property>
+         <property name="invisible" stdset="0">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
       </layout>
-     </item>
-     <item>
-      <widget class="imageViewer" name="imageFrame" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -414,6 +439,9 @@
      </property>
      <item>
       <widget class="QTabWidget" name="settingsTableWidget">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -1696,6 +1724,9 @@
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>

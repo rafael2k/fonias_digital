@@ -12,7 +12,7 @@
   </property>
   <property name="font">
    <font>
-    <pointsize>20</pointsize>
+    <pointsize>14</pointsize>
     <weight>50</weight>
     <italic>false</italic>
     <bold>false</bold>
@@ -32,16 +32,7 @@
     <property name="sizeConstraint">
      <enum>QLayout::SetNoConstraint</enum>
     </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item>
@@ -62,6 +53,12 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>16</width>
+        <height>16</height>
+       </size>
+      </property>
       <property name="movable">
        <bool>false</bool>
       </property>
@@ -78,6 +75,10 @@
          <bold>false</bold>
         </font>
        </property>
+       <attribute name="icon">
+        <iconset resource="qsstv.qrc">
+         <normaloff>:/icons/downloading-updates-xxl_Bk.png</normaloff>:/icons/downloading-updates-xxl_Bk.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Receber</string>
        </attribute>
@@ -88,16 +89,7 @@
         <property name="sizeConstraint">
          <enum>QLayout::SetNoConstraint</enum>
         </property>
-        <property name="leftMargin">
-         <number>1</number>
-        </property>
-        <property name="topMargin">
-         <number>1</number>
-        </property>
-        <property name="rightMargin">
-         <number>1</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>1</number>
         </property>
         <item>
@@ -106,6 +98,10 @@
        </layout>
       </widget>
       <widget class="QWidget" name="txTab">
+       <attribute name="icon">
+        <iconset resource="qsstv.qrc">
+         <normaloff>:/icons/upload-2-xxl_Bk.png</normaloff>:/icons/upload-2-xxl_Bk.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Enviar</string>
        </attribute>
@@ -116,16 +112,7 @@
         <property name="sizeConstraint">
          <enum>QLayout::SetNoConstraint</enum>
         </property>
-        <property name="leftMargin">
-         <number>1</number>
-        </property>
-        <property name="topMargin">
-         <number>1</number>
-        </property>
-        <property name="rightMargin">
-         <number>1</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>1</number>
         </property>
         <item>
@@ -135,7 +122,7 @@
       </widget>
       <widget class="QWidget" name="galleryTab">
        <attribute name="title">
-        <string></string>
+        <string/>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
         <property name="spacing">
@@ -144,16 +131,7 @@
         <property name="sizeConstraint">
          <enum>QLayout::SetNoConstraint</enum>
         </property>
-        <property name="leftMargin">
-         <number>1</number>
-        </property>
-        <property name="topMargin">
-         <number>1</number>
-        </property>
-        <property name="rightMargin">
-         <number>1</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>1</number>
         </property>
         <item>
@@ -199,7 +177,7 @@
      <x>0</x>
      <y>0</y>
      <width>725</width>
-     <height>18</height>
+     <height>36</height>
     </rect>
    </property>
    <property name="font">
@@ -377,6 +355,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="qsstv.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -49,7 +49,32 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <widget class="imageViewer" name="imageFrame" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>1000</width>
+           <height>1000</height>
+          </size>
+         </property>
+         <property name="visible">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
          <item>
           <widget class="QPushButton" name="startToolButton">
            <property name="sizePolicy">
@@ -58,12 +83,17 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="visible">
+            <bool>false</bool>
+           </property>
            <property name="font">
             <font>
-             <pointsize>20</pointsize>
+             <family>Noto Sans</family>
+             <pointsize>28</pointsize>
              <weight>75</weight>
              <italic>true</italic>
              <bold>true</bold>
+             <underline>true</underline>
             </font>
            </property>
            <property name="toolTip">
@@ -73,26 +103,42 @@
             <string>Iniciar receptor</string>
            </property>
            <property name="text">
-            <string>Iniciar</string>
+            <string/>
            </property>
            <property name="icon">
             <iconset resource="../qsstv.qrc">
-             <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+             <normaloff>:/icons/Receber.png</normaloff>:/icons/Receber.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>192</width>
+             <height>192</height>
+            </size>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+          <widget class="QPushButton" name="openfolder">
+           <property name="toolTip">
+            <string>Abrir pasta de arquivos</string>
            </property>
-           <property name="sizeHint" stdset="0">
+           <property name="statusTip">
+            <string>Abrir pasta de arquivos</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../qsstv.qrc">
+             <normaloff>:/icons/abrirpasta2.png</normaloff>:/icons/abrirpasta2.png</iconset>
+           </property>
+           <property name="iconSize">
             <size>
-             <width>40</width>
-             <height>20</height>
+             <width>256</width>
+             <height>60</height>
             </size>
            </property>
-          </spacer>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="stopToolButton">
@@ -104,7 +150,8 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>20</pointsize>
+             <family>Noto Sans</family>
+             <pointsize>16</pointsize>
              <weight>75</weight>
              <italic>true</italic>
              <bold>true</bold>
@@ -117,24 +164,33 @@
             <string>Parar receptor</string>
            </property>
            <property name="text">
-            <string> Parar </string>
+            <string/>
            </property>
            <property name="icon">
             <iconset resource="../qsstv.qrc">
-             <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
+             <normaloff>:/icons/Parar.png</normaloff>:/icons/Parar.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>128</width>
+             <height>128</height>
+            </size>
+           </property>
+           <property name="visible">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="resyncToolButton">
-           <property name="visible">
-            <bool>false</bool>
-           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="visible">
+            <bool>false</bool>
            </property>
            <property name="toolTip">
             <string>Reiniciar receptor</string>
@@ -185,32 +241,23 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Preferred</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>2</width>
+             <height>2</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
-       </item>
-       <item>
-        <widget class="imageViewer" name="imageFrame" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="visible">
-          <bool>false</bool>
-         </property>
-        </widget>
        </item>
       </layout>
      </item>
