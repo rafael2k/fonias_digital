@@ -54,6 +54,7 @@ public:
   void changeTransmissionMode(int rxtxMode);
 
 private slots:
+  void slotOpenFolder();
   void slotStart();
   void slotStop();
   void slotResync();

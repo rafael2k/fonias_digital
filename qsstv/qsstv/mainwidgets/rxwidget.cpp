@@ -72,6 +72,7 @@ void rxWidget::init()
 
 
   // make connections after initialization
+  connect(ui->openfolder, SIGNAL(clicked()),SLOT(slotOpenFolder()));
   connect(ui->startToolButton, SIGNAL(clicked()),SLOT(slotStart()));
   connect(ui->stopToolButton, SIGNAL(clicked()),SLOT(slotStop()));
   connect(ui->resyncToolButton,SIGNAL(clicked()),SLOT(slotResync()));
@@ -156,6 +157,11 @@ void rxWidget::slotGetParams()
   getParams();
 }
 
+void rxWidget::slotOpenFolder()
+{
+// aqui
+    system("pcmanfm /home/pi/Desktop/Arquivos &");
+}
 
 void rxWidget::slotStart()
 {
