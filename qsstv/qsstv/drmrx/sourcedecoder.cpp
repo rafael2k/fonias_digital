@@ -714,6 +714,37 @@ bool sourceDecoder::checkSaveImage(QByteArray ba,transportBlock *tbPtr)
       outFile.close();
       erasureList.clear();
       saveImage(tbPtr);
+
+      // AQUI
+      // now we must uncompress if file is has .xz extension
+      int idx = 0;
+      char cmd[2048];
+      char filename_out1[1024];
+      char filename_out2[1024];
+      QByteArray filename_BA = tbPtr->newFileName.toUtf8();
+      const char *filename_C = filename_BA.constData();
+      // printf("before decompress command cmd: %s %c %c\n", cmd, filename_C[strlen(filename_C)-2], filename_C[strlen(filename_C)-1]);
+      if ( (filename_C[strlen(filename_C)-2] == 'x') &&
+           (filename_C[strlen(filename_C)-1] == 'z') ) {
+          sprintf(cmd, "xz --single-stream -f -d \"%s\"", filename_C);
+          printf("decompress cmd: %s\n", cmd);
+          system(cmd);
+
+          // restore the '.' instead of '_'
+          strcpy(filename_out1, filename_C);
+          filename_out1[strlen(filename_out1)-3] = 0;
+          for (int i = 0; i < strlen(filename_out1); i++){
+              if (filename_out1[i] == '_')
+                  idx = i;
+          }
+          if (idx != 0) {
+              strcpy(filename_out2, filename_out1);
+              filename_out2[idx] = '.';
+              sprintf(cmd, "mv \"%s\" \"%s\"", filename_out1, filename_out2);
+              system(cmd);
+          }
+      }
+
     }
   return false;
 }

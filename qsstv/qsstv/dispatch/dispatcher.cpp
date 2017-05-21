@@ -411,99 +411,194 @@ void dispatcher::startDRMTxBinary()
   dirDialog d((QWidget *)mainWindowPtr,"Binary File");
   QString filename=d.openFileName("","*");
 
-  // lets compress the image files
-  // Sugestoes: 1100px lado maior fica ok! -- 1080 do lado maior....
+  // TODO: compressao h.265 / BPG
+  // Sugestoes: 1080px do lado maior....
   // h.265 fica bem bom hein - ffmpeg ftw
   // TODO: check if the output file is smaller than original one
-  // ffmpeg -i foto.jpg -vf scale=-1:1080  -b 500k -minrate 500k -maxrate 500k -bufsize 1000k
-  // idea: iterate till we get a picbelow some size...
-#define MAX_PIC_SIZE 100000 // 100k
-  int resolutions[3];
+  // ffmpeg -i foto.jpg -vf scale=-1:1080  -b 500k -minrate 500k -maxrate 500k -bufsize 1000k // usar -qmin?
+  // idea: iterate till we get a pic below some size...
+#define MAX_PIC_SIZE 51200 // ~50k
+#define MIN_SIZE_TO_COMPRESS 10240 // ~10k 
+  int resolutions[4];
   resolutions[0] = 1080;
   resolutions[1] = 720;
   resolutions[2] = 480;
+  resolutions[3] = 360;
 
-#if 1
-  if (filename.endsWith(".jpg") || filename.endsWith(".Jpg") || filename.endsWith(".JPG") || 
+#if 1 // JPEG image compression
+  if (filename.endsWith(".jpg") || filename.endsWith(".Jpg") || filename.endsWith(".JPG") ||
       filename.endsWith(".jpeg") || filename.endsWith(".JPEG") ||  filename.endsWith(".Jpeg") ||
-      filename.endsWith(".png") || filename.endsWith(".PNG")){
-
+      filename.endsWith(".png") || filename.endsWith(".PNG") ){
 
       finfo.setFile(filename);
       size_pic = finfo.size();
-      int res_index = 0;
-      QString filename_elected = filename;
-      char cmd[2048];
-      while (size_pic > MAX_PIC_SIZE && res_index < 3) {
+      if (size_pic > MAX_PIC_SIZE){
 
-          int lastPoint = filename.lastIndexOf(".");
-          QString filenameH = filename.left(lastPoint);
-          filenameH.append("-H.jpg");
+          int res_index = 0;
+          QString filename_elected = filename;
+          char cmd[2048];
+          while (res_index < 4) {
 
-          QString filenameW = filename.left(lastPoint);
-          filenameW.append("-W.jpg");
+              int lastPoint = filename.lastIndexOf(".");
+              QString filenameH = filename.left(lastPoint);
+              filenameH.append("-H.jpg");
 
-// C magic
+              QString filenameW = filename.left(lastPoint);
+              filenameW.append("-W.jpg");
+
+              QByteArray filename_BA = filename.toUtf8();
+              const char *filename_C = filename_BA.constData();
+
+
+              QByteArray filenameH_BA = filenameH.toUtf8();
+              const char *filenameH_C = filenameH_BA.constData();
+              int i = 0;
+              int idx = i;
+              while ( filenameH_C[i] != 0 ){
+                  if (filenameH_C[i] == '/')
+                      idx = i+1;
+                  i++;
+              }
+              sprintf(cmd, "ffmpeg -y -i \"%s\" -vf scale=-1:%d \"/tmp/%s\"", filename_C, resolutions[res_index], filenameH_C + idx);
+              printf("cmd: %s\n", cmd);
+              system(cmd);
+
+              QString filenameHH = "/tmp/";
+              i = idx;
+              while (filenameH_C[i] != 0){
+                  filenameHH.append(filenameH.at(i));
+                  i++;
+              }
+
+              QByteArray filenameW_BA = filenameW.toUtf8();
+              const char *filenameW_C = filenameW_BA.constData();
+              i = 0;
+              idx = i;
+              while ( filenameW_C[i] != 0 ){
+                  if (filenameW_C[i] == '/')
+                      idx = i+1;
+                  i++;
+              }
+              sprintf(cmd, "ffmpeg -y -i \"%s\" -vf scale=%d:-1 \"/tmp/%s\"", filename_C, resolutions[res_index], filenameW_C + idx);
+              printf("cmd: %s\n", cmd);
+              system(cmd);
+
+              QString filenameWW = "/tmp/";
+              i = idx;
+              while (filenameW_C[i] != 0){
+                  filenameWW.append(filenameW.at(i));
+                  i++;
+              }
+
+              finfo.setFile(filenameHH);
+              int sizeH = finfo.size();
+
+              finfo.setFile(filenameWW);
+              int sizeW = finfo.size();
+
+              if (sizeW < size_pic && sizeW < sizeH){
+                  size_pic = sizeW;
+                  filename_elected = filenameWW;
+              }
+
+              if (sizeH < size_pic && sizeH <= sizeW){
+                  size_pic = sizeH;
+                  filename_elected = filenameHH;
+              }
+
+              res_index++;
+          }
+          qDebug("Elected pic with size: %d\n", size_pic);
+
+          // rename the file from
+          QByteArray filename_from_BA = filename_elected.toUtf8();
+          const char *filename_from_C = filename_from_BA.constData();
+
+          // to
+          int lastMinus = filename_elected.lastIndexOf("-");
+          QString filename_to = filename_elected.left(lastMinus);
+          QByteArray filename_to_BA = filename_to.toUtf8();
+          const char *filename_to_C = filename_to_BA.constData();
+
+          char filename_to_d[1024];
+          strcpy(filename_to_d, filename_to_C);
+          strcat(filename_to_d, ".jpg");
+          printf("filename to send: %s\n", filename_to_d);
+
+          sprintf(cmd, "mv \"%s\" \"%s\"", filename_from_C, filename_to_d);
+          printf("move command: %s\n", cmd);
+          system(cmd);
+
+          filename_to.append(".jpg");
+          filename = filename_to;
+
+      }
+  }
+#endif
+
+#if 0 // h.265 coding... (copy compiled ffmpeg! ffmpeg has constraints about resolution size... use bpg? )
+  if (filename.endsWith(".jpg") || filename.endsWith(".Jpg") || filename.endsWith(".JPG") ||
+      filename.endsWith(".jpeg") || filename.endsWith(".JPEG") ||  filename.endsWith(".Jpeg") ||
+      filename.endsWith(".png") || filename.endsWith(".PNG")){
+  }
+#endif
+
+#if 1 // general compression (or just for spreadsheet and text files?)
+  else {
+      finfo.setFile(filename);
+      int file_size = finfo.size();
+
+      if (file_size > MIN_SIZE_TO_COMPRESS) {
+          char cmd[2048];
+          char filename_output[1024];
+
           QByteArray filename_BA = filename.toUtf8();
           const char *filename_C = filename_BA.constData();
 
+          strcpy(filename_output, "/tmp/");
 
-          QByteArray filenameH_BA = filenameH.toUtf8();
-          const char *filenameH_C = filenameH_BA.constData();
+          // find the "/"
           int i = 0;
           int idx = i;
-          while ( filenameH_C[i] != 0 ){
-              if (filenameH_C[i] == '/')
+          while ( filename_C[i] != 0 ){
+              if (filename_C[i] == '/')
                   idx = i+1;
               i++;
           }
-          sprintf(cmd, "ffmpeg -y -i \"%s\" -vf scale=-1:%d \"/tmp/%s\"", filename_C, resolutions[res_index], filenameH_C + idx);
-          printf("cmd: %s\n", cmd);
+
+          strcat(filename_output, filename_C+idx);
+          // workaround nasty qsstv bug
+          for (int i = 0; i < strlen(filename_output); i++){
+              if (filename_output[i] == '.') {
+                  filename_output[i] = '_';
+              }
+          }
+          strcat(filename_output, ".xz");
+
+          sprintf(cmd, "xz -z -9 -e -f -k -c \"%s\" > \"%s\"", filename_C, filename_output);
+
+          printf("compression cmd: %s\n", cmd);
           system(cmd);
 
-          filenameH = "/tmp/";
-          filenameH.append(filenameH_C + idx);
-
-
-          QByteArray filenameW_BA = filenameW.toUtf8();
-          const char *filenameW_C = filenameW_BA.constData();
-          i = 0;
-          idx = i;
-          while ( filenameW_C[i] != 0 ){
-              if (filenameW_C[i] == '/')
-                  idx = i+1;
+          QString filenameXZ = "/tmp/";
+          i = idx;
+          while (filename_C[i] != 0){
+              if (filename.at(i) == '.')
+                  filenameXZ.append('_');
+              else{
+                  if (i < filename.count())
+                      filenameXZ.append(filename.at(i));
+              }
               i++;
           }
-          sprintf(cmd, "ffmpeg -y -i \"%s\" -vf scale=%d:-1 \"/tmp/%s\"", filename_C, resolutions[res_index], filenameW_C + idx);
-          printf("cmd: %s\n", cmd);
-          system(cmd);
 
-          filenameW = "/tmp/";
-          filenameW.append(filenameW_C + idx);
-
-
-          finfo.setFile(filenameH);
-          int sizeH = finfo.size();
-
-          finfo.setFile(filenameW);
-          int sizeW = finfo.size();
-
-          if (sizeW < size_pic && sizeW < sizeH){
-              size_pic = sizeW;
-              filename_elected = filenameW;
-          }
-
-          if (sizeH < size_pic && sizeH <= sizeW){
-              size_pic = sizeH;
-              filename_elected = filenameH;
-          }
-
-          res_index++;
+          filenameXZ.append(".xz");
+          filename = filenameXZ;
       }
-      qDebug("Elected pic with size: %d\n", size_pic);
-      filename = filename_elected;
+
   }
 #endif
+
 
   if(filename.isEmpty()) return;
   if(!txWidgetPtr->functionsPtr()->prepareBinary(filename)) return;

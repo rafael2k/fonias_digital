@@ -57,11 +57,13 @@ QString drmTx::getTxFileName(QString fileName)
       prefix=QString("de_"+myCallsign+"-%1-").arg(hybridTxCount);
     }
   else {
+#if 0
       // Once allocated, keep the same TX name...
       // cleared by applyTemplate() or forgetTxFileName()
       if (drmTxStamp.isEmpty())
         drmTxStamp=QDateTime::currentDateTime().toUTC().toString("yyyyMMddHHmmss");
       prefix = drmTxStamp+"-";
+#endif
     }
 
   if(fileName.isEmpty())
@@ -73,7 +75,11 @@ QString drmTx::getTxFileName(QString fileName)
       finf.setFile(fileName);
     }
 
-  drmTxFileName.setFile(prefix + finf.fileName());
+//  drmTxFileName.setFile(prefix + finf.fileName());
+  drmTxFileName.setFile(finf.fileName());
+  QByteArray filename_BA = finf.fileName().toUtf8();
+  const char *filename_C = filename_BA.constData();
+  printf("getTxFilename filename: %s\n",  filename_C);
   return drmTxFileName.fileName();
 }
 

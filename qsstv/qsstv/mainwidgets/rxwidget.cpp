@@ -159,7 +159,6 @@ void rxWidget::slotGetParams()
 
 void rxWidget::slotOpenFolder()
 {
-// aqui
     system("pcmanfm /home/pi/Desktop/Arquivos &");
 }
 
