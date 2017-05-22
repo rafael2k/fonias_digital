@@ -437,7 +437,7 @@ void dispatcher::startDRMTxBinary()
           int res_index = 0;
           QString filename_elected = filename;
           char cmd[2048];
-          while (res_index < 4) {
+          while (res_index < 4 && size_pic > MAX_PIC_SIZE) {
 
               int lastPoint = filename.lastIndexOf(".");
               QString filenameH = filename.left(lastPoint);
